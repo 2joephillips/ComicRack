@@ -1,4 +1,5 @@
 ﻿using ComicRack.Data.Data;
+using ComicReader.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Configuration;
 using System.Data;
@@ -21,6 +22,7 @@ public partial class App : Application
             {
                 context.Database.Migrate();
                 Console.WriteLine("Database migrated and up-to-date.");
+                DBSeeder.SeedInitialSettingsAsync(context);
             }
             catch (Exception ex)
             {

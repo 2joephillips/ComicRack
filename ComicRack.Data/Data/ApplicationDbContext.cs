@@ -6,6 +6,7 @@ namespace ComicRack.Data.Data;
 public partial class ApplicationDbContext : DbContext
 {
     public DbSet<Comic> Comics { get; set; }
+    public DbSet<Setting> Settings { get; set; }
 
     public ApplicationDbContext()
     {
