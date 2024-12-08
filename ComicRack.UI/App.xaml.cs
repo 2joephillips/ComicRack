@@ -1,4 +1,5 @@
 ﻿using ComicRack.Data.Data;
+using ComicRack.UI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -31,6 +32,7 @@ public partial class App : Application
 
                 // Register MainWindow
                 services.AddSingleton<MainWindow>();
+                services.AddSingleton<StartUp>();
             })
                .ConfigureLogging(logging =>
                {
@@ -44,13 +46,21 @@ public partial class App : Application
     {
         await _host.StartAsync();
 
-     
         // Resolve and run the database initializer
         var databaseInitializer = _host.Services.GetRequiredService<DatabaseInitializer>();
-        await databaseInitializer.InitializeDatabaseAsync();
+        var wasInitialized = await databaseInitializer.InitializeDatabaseAsync();
 
-        var mainWindow = _host.Services.GetRequiredService<MainWindow>();
-        mainWindow.Show();
+        if (wasInitialized)
+        {
+            var startUp = _host.Services.GetRequiredService<StartUp>();
+            startUp.Show();
+        }
+        else
+        {
+            var mainWindow = _host.Services.GetRequiredService<MainWindow>();
+            mainWindow.Show();
+        }
+
 
         base.OnStartup(e);
 
