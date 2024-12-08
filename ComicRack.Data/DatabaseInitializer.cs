@@ -13,7 +13,7 @@ namespace ComicReader.UI
             _context = context;
         }
 
-        public async Task InitializeDatabaseAsync()
+        public async Task<bool> InitializeDatabaseAsync()
         {
             try
             {
@@ -22,7 +22,7 @@ namespace ComicReader.UI
                 Console.WriteLine("Database migrated and up-to-date.");
 
                 // Seed initial settings
-                await DBSeeder.SeedInitialSettingsAsync(_context);
+                return await DBSeeder.SeedInitialSettingsAsync(_context);
             }
             catch (Exception ex)
             {
