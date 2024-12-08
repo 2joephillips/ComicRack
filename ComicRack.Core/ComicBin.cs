@@ -1,19 +1,6 @@
-﻿namespace ComicReader.Core;
+﻿namespace ComicRack.Core;
 
-public class Comic
-{
-  public string FilePath { get; set; }
-  public string FileName { get; set; }
-
-  public Comic(string filePath, string fileName)
-  {
-    FilePath = filePath;
-    FileName = fileName;
-  }
-}
-
-
-public class ComicRack
+public class ComicBin
 {
   private string comic_library_location = @"D:\Comics";
   private string storage_file_location = @"D:\Comics\";

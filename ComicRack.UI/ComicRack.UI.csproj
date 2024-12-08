@@ -13,7 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ComicReader.Core\ComicReader.Core.csproj" />
+    <ProjectReference Include="..\ComicRack.Core\ComicRack.Core.csproj" />
+    <ProjectReference Include="..\ComicRack.Data\ComicRack.Data.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComicRack.Data", "ComicRack.Data\ComicRack.Data.csproj", "{39284C7D-489B-4DB5-A7CF-67678F6B2337}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComicRack.Core", "ComicRack.Core\ComicRack.Core.csproj", "{58D3F1DF-94D6-4F7F-B3D6-4D2B2AA0D8B9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComicRack.UI", "ComicRack.UI\ComicRack.UI.csproj", "{99E9FC98-3ED7-4AEE-A24F-599B8F2CE5AF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{39284C7D-489B-4DB5-A7CF-67678F6B2337}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39284C7D-489B-4DB5-A7CF-67678F6B2337}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39284C7D-489B-4DB5-A7CF-67678F6B2337}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39284C7D-489B-4DB5-A7CF-67678F6B2337}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58D3F1DF-94D6-4F7F-B3D6-4D2B2AA0D8B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58D3F1DF-94D6-4F7F-B3D6-4D2B2AA0D8B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58D3F1DF-94D6-4F7F-B3D6-4D2B2AA0D8B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58D3F1DF-94D6-4F7F-B3D6-4D2B2AA0D8B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99E9FC98-3ED7-4AEE-A24F-599B8F2CE5AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99E9FC98-3ED7-4AEE-A24F-599B8F2CE5AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99E9FC98-3ED7-4AEE-A24F-599B8F2CE5AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99E9FC98-3ED7-4AEE-A24F-599B8F2CE5AF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
