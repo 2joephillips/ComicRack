@@ -4,6 +4,7 @@ using ComicReader.UI;
 using Microsoft.Win32;
 using System.IO;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace ComicRack.UI
 {
@@ -24,18 +25,43 @@ namespace ComicRack.UI
             _comicRack = new ComicBin();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 var folderName = SelectComicFolder();
                 if (folderName == null) return;
 
-                var files = ScanFolder(folderName);
+                var files = await ScanFolder(folderName).ConfigureAwait(false); ;
                 if (files == null) return;
                 var comics = files.Select(file => new Comic(file)).ToList();
-                SaveFilesToDB(comics);
-                MessageBox.Show("Initialization complete!");
+
+                var result =  MessageBox.Show("Found " + comics.Count + " comics. Do you want to start scanning?", "?", MessageBoxButton.OKCancel);
+                if (result == MessageBoxResult.OK) {
+
+                    // Process each comic asynchronously
+
+                    var comicsCount = comics.Count() + 1;
+                    foreach (var comic in comics)
+                    {
+                     
+
+                        // Fetch metadata for the comic on a background thread
+                        await Task.Run(() => comic.GetMetaData()).ConfigureAwait(false);
+
+                        // Create a TreeViewItem for the comic and update the UI
+                        // Create the TreeViewItem and update the UI on the Dispatcher thread
+                        await Dispatcher.InvokeAsync(() =>
+                        {
+                            double completionRate = (comics.IndexOf(comic)+1) / (double)comicsCount ;
+                            progress_bar.Value = completionRate * 100;
+                            var item = new TreeViewItem { Header = comic.FileName };
+                            comics_list.Items.Add(item);
+                        });
+                    }
+                }
+                else { }
+
             }
             catch (Exception ex)
             {
@@ -44,11 +70,7 @@ namespace ComicRack.UI
                 return;
             }
 
-            // Open the MainWindow
-            _mainWindow.Show();
-
-            // Close the StartupWindow
-            Close();
+         
 
 
         }
@@ -59,17 +81,19 @@ namespace ComicRack.UI
             _dbContext.SaveChanges();
         }
 
-        private List<string>? ScanFolder(string folderName)
+        private Task<List<string>>? ScanFolder(string folderName)
         {
-            var comicLocation = _comicRack.COMIC_LIBRARY_LOCACTION;
-            var supportedExtensions = new List<string>() { ".jpg", ".png", ".pdf", ".cbz", ".cbr" };
+          return Task.Run(() =>
+            {
+                var supportedExtensions = new List<string>() { ".jpg", ".png", ".pdf", ".cbz", ".cbr" };
 
-            // Get all file paths in the root directory and its subdirectories
-            var filePaths = Directory.GetFiles(comicLocation, "*.*", SearchOption.AllDirectories)
-                .Where(file => supportedExtensions.Contains(System.IO.Path.GetExtension(file).ToLower()))
-                .ToList();
+                // Get all file paths in the root directory and its subdirectories
+                var filePaths = Directory.GetFiles(folderName, "*.*", SearchOption.AllDirectories)
+                    .Where(file => supportedExtensions.Contains(System.IO.Path.GetExtension(file).ToLower()))
+                    .ToList();
 
-            return filePaths;
+                return filePaths;
+            });
         }
 
         private string? SelectComicFolder()
@@ -81,6 +105,11 @@ namespace ComicRack.UI
             }
 
             return null;
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

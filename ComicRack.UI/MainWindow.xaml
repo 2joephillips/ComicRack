@@ -6,5 +6,7 @@
         xmlns:local="clr-namespace:ComicReader.UI"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800" Background="Red">
-    <Grid />
+    <Grid>
+        <TreeView Margin="0,0,593,0" Name="TreeView"/>
+    </Grid>
 </Window>

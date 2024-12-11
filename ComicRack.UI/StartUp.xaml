@@ -5,12 +5,50 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ComicRack.UI"
         mc:Ignorable="d"
-        Title="StartUp" Height="450" Width="800" Background="AliceBlue">
+        Title="StartUp"
+        Height="450"
+        Width="800"
+        Background="AliceBlue">
     <Grid>
-        <Button Content="Pick Comic Folder"
-                HorizontalAlignment="Left"
-                Margin="372,227,0,0"
-                VerticalAlignment="Top"
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <!-- Row 1: Button -->
+            <RowDefinition Height="*" />
+            <!-- Row 2: TreeView -->
+            <RowDefinition Height="Auto" />
+            <!-- Row 3: Button and ProgressBar -->
+        </Grid.RowDefinitions>
+
+        <Button Content="Load Comics"
+                Margin="10"
+                Grid.Row="0"
+                HorizontalAlignment="Center"
                 Click="Button_Click" />
+
+        <TreeView x:Name="comics_list"
+                  Margin="10"
+                  Grid.Row="1" />
+        
+        <StackPanel Orientation="Horizontal"
+                    Grid.Row="2"
+                    Margin="10"
+                    HorizontalAlignment="Stretch">
+            <Button Content="Close"
+                    Width="100"
+                    Margin="0,0,10,0" />
+            <ProgressBar x:Name="progress_bar"
+                         Height="20"
+                         VerticalAlignment="Center"
+                         IsIndeterminate="False"
+                         Minimum="0"
+                         Maximum="100"
+                         Value="0"
+                         Width="250"
+                         HorizontalAlignment="Right" />
+            
+            <TextBlock TextWrapping="Wrap"
+                       Margin="10"
+                       Text="TextBlock" />
+        </StackPanel>
     </Grid>
 </Window>
