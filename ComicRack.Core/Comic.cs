@@ -5,12 +5,9 @@ using System.Xml.Linq;
 
 namespace ComicRack.Core;
 
-
 [Table("Comics")]
-public class Comic
+public class Comic 
 {
-    private string file;
-
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
@@ -18,46 +15,36 @@ public class Comic
     public string FileName { get; set; }
 
     [NotMapped]
+    public string CoverImagePath { get; set; }
+
+    [NotMapped]
     public MetaData MetaData { get; set; }
     [NotMapped]
     public bool UnableToOpen { get; set; }
 
+    private readonly IComicMetadataExtractor _metadataExtractor;
+
     public Comic() { }
 
-    public Comic(string file)
+    public Comic(string filePath, IComicMetadataExtractor metadataExtractor)
     {
-        FilePath = file;
-        FileName = file.Split('\\').LastOrDefault() ?? string.Empty;
+        if(string.IsNullOrEmpty(filePath)) 
+            throw new ArgumentException("File path cannot be null or empty.", nameof(filePath));
+
+        FilePath = filePath;
+        FileName = filePath.Split('\\').LastOrDefault() ?? string.Empty;
+        _metadataExtractor = metadataExtractor ?? throw new ArgumentNullException(nameof(metadataExtractor));
     }
 
-    public void GetMetaData()
-    {
-        if (FilePath.EndsWith(".cbz", StringComparison.OrdinalIgnoreCase))
-        {
-            ExtractMetadataFromZip();
-        }
-        else
-        {
-            throw new NotImplementedException("Unsupported File Type");
-        }
-    }
-
-    private void ExtractMetadataFromZip()
+    public void LoadMetaData()
     {
         try
         {
-            using FileStream zipToOpen = new FileStream(FilePath, FileMode.Open);
-            using ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Read);
-            var comicXML = archive.Entries.FirstOrDefault(e => e.Name == "ComicInfo.xml");
-            if (comicXML != null)
-            {
-                using Stream stream = comicXML.Open();
-                var doc = XDocument.Load(stream);
-                var comicInfo = new MetaData(doc);
-                MetaData = comicInfo;
-            }
+            (MetaData metaData, string coverPath) = _metadataExtractor.ExtractMetadata(FilePath);
+            MetaData = metaData;
+            CoverImagePath = coverPath;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             UnableToOpen = true;
         }
