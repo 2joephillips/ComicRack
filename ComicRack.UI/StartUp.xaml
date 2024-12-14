@@ -12,19 +12,25 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <!-- Row 1: Button -->
             <RowDefinition Height="*" />
             <!-- Row 2: TreeView -->
             <RowDefinition Height="Auto" />
             <!-- Row 3: Button and ProgressBar -->
         </Grid.RowDefinitions>
-
-        <Button Content="Load Comics"
+        <TextBlock x:Name="Info"  
+                   Grid.Row="0" 
+                   Text="Click button to select comics root folder, and scan comics for import." 
+                   FontSize="25" 
+                   HorizontalAlignment="Center" 
+                   VerticalAlignment="Center"/>
+        <Button Content="Scan Comics"
                 Margin="10"
-                Grid.Row="0"
+                Grid.Row="1"
                 HorizontalAlignment="Center"
                 Click="ScanFolders" />
-        <Grid Grid.Row="1"
+        <Grid Grid.Row="2"
               Margin="10"
               HorizontalAlignment="Stretch">
             <Grid.ColumnDefinitions>
@@ -47,7 +53,7 @@
         </Grid>
 
         <StackPanel Orientation="Horizontal"
-                    Grid.Row="2"
+                    Grid.Row="3"
                     Margin="10"
                     HorizontalAlignment="Stretch">
             <Button Content="Close"
