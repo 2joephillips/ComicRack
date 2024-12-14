@@ -23,12 +23,29 @@
                 Margin="10"
                 Grid.Row="0"
                 HorizontalAlignment="Center"
-                Click="Button_Click" />
+                Click="ScanFolders" />
+        <Grid Grid.Row="1"
+              Margin="10"
+              HorizontalAlignment="Stretch">
+            <Grid.ColumnDefinitions>
+                <!-- TreeView takes 2/3 of the width -->
+                <ColumnDefinition Width="2*" />
+                <!-- Image takes 1/3 of the width -->
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
 
-        <TreeView x:Name="comics_list"
-                  Margin="10"
-                  Grid.Row="1" />
-        
+            <!-- TreeView -->
+            <TreeView x:Name="comics_list"
+                      Margin="10"
+                      Grid.Column="0" />
+
+            <!-- Image -->
+            <Image x:Name="loading_image"
+                   Margin="10"
+                   Grid.Column="1"
+                   Stretch="Uniform" />
+        </Grid>
+
         <StackPanel Orientation="Horizontal"
                     Grid.Row="2"
                     Margin="10"
@@ -46,7 +63,8 @@
                          Width="250"
                          HorizontalAlignment="Right" />
             
-            <TextBlock TextWrapping="Wrap"
+            <TextBlock x:Name="statusLabel"
+                TextWrapping="Wrap"
                        Margin="10"
                        Text="TextBlock" />
         </StackPanel>

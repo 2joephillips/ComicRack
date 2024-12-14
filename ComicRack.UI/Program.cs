@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Threading;
-using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using ComicReader.UI;
 using ComicRack.Data.Data;
+using ComicRack.Core;
+using System.IO;
 
 namespace ComicRack.UI
 {
@@ -19,12 +20,11 @@ namespace ComicRack.UI
         static void Main(string[] args)
         {
             // Start the WPF application on a dedicated STA thread
-            Thread uiThread = new Thread(StartWpfApp)
+            Thread uiThread = new Thread(WpfApp)
             {
                 IsBackground = false, // Keep the thread alive until the application exits
-                ApartmentState = ApartmentState.STA // Ensure STA model
             };
-
+            uiThread.SetApartmentState(ApartmentState.STA);
             uiThread.Start();
 
 
@@ -47,7 +47,7 @@ namespace ComicRack.UI
             }
         }
 
-        private static void StartWpfApp()
+        private static void WpfApp()
         {
             _host = Host.CreateDefaultBuilder()
                          .ConfigureServices((context, services) =>
@@ -62,7 +62,9 @@ namespace ComicRack.UI
 
                              // Register database initializer
                              services.AddTransient<DatabaseInitializer>();
-                             services.AddSingleton<StartUpApp>();
+                             services.AddSingleton<Bootstrapper>();
+                             services.AddSingleton<IComicMetadataExtractor, ComicMetadataExtractor>();
+                             services.AddSingleton<ISystemStorage, SystemStorage>();
 
                              // Register WPF components
                              services.AddSingleton<MainWindow>();
@@ -76,43 +78,8 @@ namespace ComicRack.UI
                          .Build();
 
             // Start the WPF application
-            var startup = _host.Services.GetRequiredService<StartUpApp>();
-            startup.Run();
-        }
-    }
-
-    public class StartUpApp
-    {
-        private readonly IServiceProvider _serviceProvider;
-        private readonly IHost _host;
-
-        public StartUpApp(IServiceProvider serviceProvider, IHost host)
-        {
-            _serviceProvider = serviceProvider;
-            _host = host;
-        }
-
-        public async void Run()
-        {
-            var app = new Application();
-            // Start the host
-            await _host.StartAsync();
-
-            var databaseInitializer = _serviceProvider.GetRequiredService<DatabaseInitializer>();
-            var wasInitialized = await databaseInitializer.InitializeDatabaseAsync();
-
-            if (wasInitialized.SetupCompleted)
-            {
-                var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
-               app.Run(mainWindow);
-            }
-            else
-            {
-                var startUp = _serviceProvider.GetRequiredService<StartUp>();
-                app.Run(startUp);
-            }
-
-            await _host.StopAsync();
+            var bootstrap = _host.Services.GetRequiredService<Bootstrapper>();
+            bootstrap.Run();
         }
     }
 }
