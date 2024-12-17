@@ -1,6 +1,7 @@
-﻿using System.Xml.Linq;
+﻿using ComicRack.Core.Extensions;
+using System.Xml.Linq;
 
-namespace ComicRack.Core;
+namespace ComicRack.Core.Models;
 
 public class MetaData
 {

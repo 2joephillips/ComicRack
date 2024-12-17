@@ -1,28 +1,26 @@
 ﻿using ComicRack.Core;
+using ComicRack.Core.Models;
 using ComicRack.Data.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace ComicReader.UI
 {
-    public  class DatabaseInitializer
+    public  class DatabaseHandler
     {
         private readonly ApplicationDbContext _context;
 
-        public DatabaseInitializer(ApplicationDbContext context)
+        public DatabaseHandler(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        public async Task<(bool Initilized, bool SetupCompleted)> InitializeDatabaseAsync()
+        public async void EnsureDatabaseInitialized()
         {
             try
             {
                 // Apply migrations
                 await _context.Database.MigrateAsync();
                 Console.WriteLine("Database migrated and up-to-date.");
-
-                // Seed initial settings
-                return await SeedInitialSettingsAsync(_context);
             }
             catch (Exception ex)
             {
@@ -32,21 +30,20 @@ namespace ComicReader.UI
         }
 
 
-        private static async Task<(bool Initilized, bool SetupCompleted)> SeedInitialSettingsAsync(ApplicationDbContext context)
+        public async Task<bool> InitializeSettings()
         {
-            var anySettings = context.Settings.Any();
+            var anySettings = _context.Settings.Any();
             if (anySettings)
             {
-                var setting = await context.Settings.FirstOrDefaultAsync(s => s.Key == "SetUpComplete");
+                var setting = await _context.Settings.FirstOrDefaultAsync(s => s.Key == "SetUpComplete");
                 var setupComplete = setting != null && setting.Value == "true";
-                return (false, setupComplete);
+                return (setupComplete);
             };
-            context.Settings.AddRange(
-                new Setting { Key = "Theme", Value = "Lite" },
+            _context.Settings.AddRange(
                 new Setting { Key = "SetUpComplete", Value = "false" }
                 );
-            await context.SaveChangesAsync();
-            return (true, false);
+            await _context.SaveChangesAsync();
+            return false;
         }
     }
 }

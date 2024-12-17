@@ -1,4 +1,5 @@
 ﻿using ComicRack.Core;
+using ComicRack.Core.Models;
 using ComicRack.Data.Data;
 using ComicReader.UI;
 using FontAwesome.WPF;
@@ -19,7 +20,6 @@ namespace ComicRack.UI
         private ApplicationDbContext _dbContext;
         private MainWindow _mainWindow;
         private IComicMetadataExtractor _extractor;
-        private ComicBin _comicRack;
 
         public StartUp(ApplicationDbContext dbContext, MainWindow mainWindow, IComicMetadataExtractor extractor)
         {
@@ -27,7 +27,6 @@ namespace ComicRack.UI
             _dbContext = dbContext;
             _mainWindow = mainWindow;
             _extractor = extractor;
-            _comicRack = new ComicBin();
         }
 
         private async void ScanFolders(object sender, RoutedEventArgs e)
@@ -37,7 +36,7 @@ namespace ComicRack.UI
                 var folderName = SelectComicFolder();
                 if (folderName == null) return;
 
-                var files = await FolderServices.ScanFolder(folderName).ConfigureAwait(false); ;
+                var files = await FolderHandler.ScanFolder(folderName).ConfigureAwait(false); ;
                 if (files == null || !files.Any()) return;
 
                 var comics = files.Select(file => new Comic(file, _extractor)).ToList();
@@ -74,14 +73,14 @@ namespace ComicRack.UI
         private void UpdateTreeView(Comic comic, int totalCount)
         {
             // Create a TreeViewItem for the comic and update the UI
-            var item = CreateTreeViewItem(comic.UnableToOpen, comic.FilePath, comic.CoverImagePath);
+            var item = CreateTreeViewItem(comic.UnableToOpen, comic.FilePath, comic.CoverImagePaths.ThumbnailPath);
             comics_list.Items.Add(item);
 
             if (!comic.UnableToOpen) {
                 var bitmapImage = new BitmapImage();
                 bitmapImage.BeginInit();
                 bitmapImage.CreateOptions = BitmapCreateOptions.IgnoreColorProfile;
-                bitmapImage.UriSource = new Uri(comic.CoverImagePath, UriKind.Absolute);
+                bitmapImage.UriSource = new Uri(comic.CoverImagePaths.HighResPath, UriKind.Absolute);
                 bitmapImage.EndInit();
                 loading_image.Source = bitmapImage;
             }

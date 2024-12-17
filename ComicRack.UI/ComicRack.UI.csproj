@@ -7,6 +7,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <StartupObject>ComicRack.UI.Program</StartupObject>
+    <AssemblyName>ComicRack</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,6 +22,10 @@
   <ItemGroup>
     <ProjectReference Include="..\ComicRack.Core\ComicRack.Core.csproj" />
     <ProjectReference Include="..\ComicRack.Data\ComicRack.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
 
 </Project>

@@ -1,46 +1,49 @@
-﻿using System.IO.Compression;
+﻿using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO.Compression;
 
 namespace ComicRack.Core
 {
     public interface ISystemStorage
     {
-        string AppDataPath { get; }
 
-        string WriteComicCoverToAppData(ZipArchiveEntry? coverImage);
+        (string ThumbnailPath, string MediumPath, string HighResPath) CreateComicCoverImages(ZipArchiveEntry? coverImage);
     }
 
     public class SystemStorage : ISystemStorage
     {
-        public string AppDataPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "ComicRack");
         public SystemStorage()
         {
-            EnsureAppDataFolderExists();
         }
 
-        public string WriteComicCoverToAppData(ZipArchiveEntry? coverImage)
+        public (string ThumbnailPath, string MediumPath, string HighResPath) CreateComicCoverImages(ZipArchiveEntry coverImage)
         {
             if (coverImage == null)
-                return "";
+                return (ImageHandler.DefaultThumbNailImageLocation, ImageHandler.DefaultMediumResImageLocation, ImageHandler.DefaultHighResImageLocation);
 
-            var fileName = Guid.NewGuid().ToString() + "." + coverImage.Name.Split('.').LastOrDefault();
-            var filePath = Path.Combine(AppDataPath, fileName);
+            // Generate a unique file name
+            var thumbnailFileName = Guid.NewGuid().ToString() + "_thumbnail.jpg";
+            var mediumFileName = Guid.NewGuid().ToString() + "_medium.jpg";
+            var highResFileName = Guid.NewGuid().ToString() + "_highres.jpg";
+
+            var thumbnailFilePath = Path.Combine(ApplicationSettings.AppDataPath, thumbnailFileName);
+            var mediumFilePath = Path.Combine(ApplicationSettings.AppDataPath, mediumFileName);
+            var highResFilePath = Path.Combine(ApplicationSettings.AppDataPath, highResFileName);
+
             using var entryStream = coverImage.Open();
-            using var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
+            using var image = Image.FromStream(entryStream); // Load the image into memory
 
-            entryStream.CopyTo(fileStream);
+            // Generate and save the three sizes
+            ImageHandler.SaveResizedImage(image, thumbnailFilePath, 150, 150, 75L); // Thumbnail
+            ImageHandler.SaveResizedImage(image, mediumFilePath, 300, 300, 85L);    // Medium
+            ImageHandler.SaveResizedImage(image, highResFilePath, 1024, 1024, 90L); // High resolution
 
-            Console.WriteLine($"File extracted to: {filePath}");
-
-            return filePath;
+            return (thumbnailFilePath, mediumFilePath, highResFilePath);
         }
 
-        private void EnsureAppDataFolderExists()
-        {
-            if (!Directory.Exists(AppDataPath))
-            {
-                Directory.CreateDirectory(AppDataPath);
-            }
-        }
 
+
+
+       
     }
 }

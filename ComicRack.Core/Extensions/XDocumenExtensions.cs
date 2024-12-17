@@ -1,8 +1,8 @@
 ﻿using System.Xml.Linq;
 
-namespace ComicRack.Core;
+namespace ComicRack.Core.Extensions;
 
-public static class XDocumentParser
+public static class XDocumenExtensions
 {
     public static XElement GetElement(this XDocument document, string elementName)
     {
@@ -16,7 +16,7 @@ public static class XDocumentParser
 
     public static int? GetRootElementAsInt(this XDocument document, string elementName)
     {
-        var value = GetRootElement(document, elementName);
+        var value = document.GetRootElement(elementName);
         return int.TryParse(value, out var year) ? year : null;
     }
 }

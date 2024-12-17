@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ComicReader.UI;
+using ComicRack.Core;
 
 namespace ComicRack.UI
 {
@@ -19,24 +20,32 @@ namespace ComicRack.UI
         public async void Run()
         {
             var app = new Application();
-            // Start the host
             await _host.StartAsync();
 
-            var databaseInitializer = _serviceProvider.GetRequiredService<DatabaseInitializer>();
-            var wasInitialized = await databaseInitializer.InitializeDatabaseAsync();
+            var setupCompleted = await InitializeApplication();
 
-            if (wasInitialized.SetupCompleted)
+
+            if (setupCompleted)
             {
                 var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
-               app.Run(mainWindow);
+                app.Run(mainWindow);
             }
-            else
-            {
+            else {
                 var startUp = _serviceProvider.GetRequiredService<StartUp>();
                 app.Run(startUp);
             }
-
             await _host.StopAsync();
+        }
+
+        private async Task<bool> InitializeApplication()
+        {
+            ApplicationSettings.EnsureAppDataFolderExists();
+
+            var databaseInitializer = _serviceProvider.GetRequiredService<DatabaseHandler>();
+            databaseInitializer.EnsureDatabaseInitialized();
+
+            return await databaseInitializer.InitializeSettings();
         }
     }
 }
+

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ComicRack.Core
+namespace ComicRack.Core.Models
 {
     [Table("Settings")]
     public class Setting

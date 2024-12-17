@@ -1,6 +1,6 @@
 ﻿using System.Xml.Linq;
 
-namespace ComicRack.Core;
+namespace ComicRack.Core.Models;
 
 public class PageMetaData
 {

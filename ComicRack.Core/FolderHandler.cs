@@ -1,6 +1,6 @@
 ﻿namespace ComicRack.Core;
 
-public static class FolderServices
+public static class FolderHandler
 {
     public static Task<List<string>> ScanFolder(string folderName)
     {

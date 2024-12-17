@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
@@ -52,19 +50,18 @@ namespace ComicRack.UI
             _host = Host.CreateDefaultBuilder()
                          .ConfigureServices((context, services) =>
                          {
-                             // Add application settings
-                             // var appSettings = context.Configuration.GetSection("AppSettings").Get<AppSettings>();
-                             // services.AddSingleton(appSettings);
 
                              // Register DbContext
                              services.AddDbContext<ApplicationDbContext>(options =>
-                                 options.UseSqlite("Data Source=comics.db"));
+                             {
+                                 options.UseSqlite($"Data Source={ApplicationSettings.DatabasePath}");
+                             });
 
                              // Register database initializer
-                             services.AddTransient<DatabaseInitializer>();
-                             services.AddSingleton<Bootstrapper>();
-                             services.AddSingleton<IComicMetadataExtractor, ComicMetadataExtractor>();
-                             services.AddSingleton<ISystemStorage, SystemStorage>();
+                             services.AddTransient<DatabaseHandler>();
+                             services.AddTransient<Bootstrapper>();
+                             services.AddTransient<IComicMetadataExtractor, ComicMetadataExtractor>();
+                             services.AddTransient<ISystemStorage, SystemStorage>();
 
                              // Register WPF components
                              services.AddSingleton<MainWindow>();
