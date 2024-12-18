@@ -60,9 +60,9 @@ namespace ComicRack.Desktop.Services
                 var setup =  await databaseInitializer.InitializeSettings();
 
                 if(setup)
-                _navigationWindow.Navigate(typeof(Views.Pages.DashboardPage));
-
-                _navigationWindow.Navigate(typeof(Views.Pages.SettingsPage));
+                _navigationWindow.Navigate(typeof(DashboardPage));
+                else
+                _navigationWindow.Navigate(typeof(StartUpPage));
             }
 
             await Task.CompletedTask;

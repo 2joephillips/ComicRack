@@ -15,5 +15,10 @@ namespace ComicRack.Desktop.Views.Pages
 
             InitializeComponent();
         }
+
+        private void ListView_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+
+        }
     }
 }

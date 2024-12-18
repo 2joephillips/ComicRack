@@ -67,6 +67,9 @@ namespace ComicRack.Desktop.Services
                 services.AddSingleton<DataViewModel>();
                 services.AddSingleton<SettingsPage>();
                 services.AddSingleton<SettingsViewModel>();
+
+                services.AddSingleton<StartUpPage>();
+                services.AddSingleton<StartUpViewModel>();
             }).Build();
         }
     }

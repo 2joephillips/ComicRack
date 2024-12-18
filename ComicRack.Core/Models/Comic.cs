@@ -27,6 +27,9 @@ public class Comic
     [NotMapped]
     public bool UnableToOpen { get; set; }
 
+    [NotMapped]
+    public string GetHighResImagePath => CoverImagePaths.HighResPath;
+
     private readonly IComicMetadataExtractor _metadataExtractor;
 
     public Comic() { }

@@ -1,12 +1,18 @@
 ﻿using System.Collections.ObjectModel;
+using Wpf.Ui;
 using Wpf.Ui.Controls;
 
 namespace ComicRack.Desktop.ViewModels.Windows
 {
     public partial class MainWindowViewModel : ObservableObject
     {
+
+
         [ObservableProperty]
         private string _applicationTitle = "WPF UI - ComicRack.Desktop";
+
+        [ObservableProperty]
+        private bool _paneOpen = false;
 
         [ObservableProperty]
         private ObservableCollection<object> _menuItems = new()
@@ -22,7 +28,7 @@ namespace ComicRack.Desktop.ViewModels.Windows
                 Content = "Data",
                 Icon = new SymbolIcon { Symbol = SymbolRegular.DataHistogram24 },
                 TargetPageType = typeof(Views.Pages.DataPage)
-            }
+            },
         };
 
         [ObservableProperty]
@@ -33,7 +39,7 @@ namespace ComicRack.Desktop.ViewModels.Windows
                 Content = "Settings",
                 Icon = new SymbolIcon { Symbol = SymbolRegular.Settings24 },
                 TargetPageType = typeof(Views.Pages.SettingsPage)
-            }
+            },
         };
 
         [ObservableProperty]

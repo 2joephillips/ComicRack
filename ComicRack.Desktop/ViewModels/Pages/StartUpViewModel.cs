@@ -1,140 +1,106 @@
 ﻿
+using ComicRack.Core.Models;
+using ComicRack.Core;
+using Microsoft.Win32;
+using System.Collections.ObjectModel;
+
 namespace ComicRack.Desktop.ViewModels.Pages
 {
-    public class StartUpViewModel
+    public partial class StartUpViewModel : ObservableObject
     {
-        //private async void ScanFolders(object sender, RoutedEventArgs e)
-        //{
-        //    try
-        //    {
-        //        var folderName = SelectComicFolder();
-        //        if (folderName == null) return;
+        private readonly IComicMetadataExtractor _extractor;
 
-        //        var files = await FolderHandler.ScanFolder(folderName).ConfigureAwait(false); ;
-        //        if (files == null || !files.Any()) return;
+        public StartUpViewModel(IComicMetadataExtractor extractor)
+        {
+            _extractor = extractor;
+        }
 
-        //        var comics = files.Select(file => new Comic(file, _extractor)).ToList();
+        [ObservableProperty]
+        private double _progressValue = 0;
 
-        //        var result = MessageBox.Show("Found " + comics.Count + " comics. Do you want to start scanning?", "?", MessageBoxButton.OKCancel);
-        //        if (result == MessageBoxResult.OK)
-        //        {
-        //            await Dispatcher.InvokeAsync(() =>
-        //            {
-        //                progress_bar.Maximum = comics.Count;
-        //            });
+        [ObservableProperty]
+        private string _selectedFolderText = "Folder Not Selected";
 
-        //            foreach (var comic in comics)
-        //            {
-        //                // Fetch metadata for the comic on a background thread
-        //                await Task.Run(() => comic.LoadMetaData()).ConfigureAwait(false);
+        [ObservableProperty]
+        private string _currentImagePath = "";
 
-        //                await Dispatcher.InvokeAsync(() =>
-        //                {
-        //                    progress_bar.Value++;
-        //                    UpdateTreeView(comic, comics.Count);
-        //                });
+        [ObservableProperty]
+        private bool _loading = false;
 
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show($"Initialization failed: {ex.Message}");
-        //        Close();
-        //    }
-        //}
+        [ObservableProperty]
+        private ObservableCollection<Comic> _comicsCollection = new ObservableCollection<Comic>();
 
-        //private void UpdateTreeView(Comic comic, int totalCount)
-        //{
-        //    // Create a TreeViewItem for the comic and update the UI
-        //    var item = CreateTreeViewItem(comic.UnableToOpen, comic.FilePath, comic.CoverImagePaths.ThumbnailPath);
-        //    comics_list.Items.Add(item);
+        [ObservableProperty]
+        private int _selectedComic = 1;
 
-        //    if (!comic.UnableToOpen)
-        //    {
-        //        var bitmapImage = new BitmapImage();
-        //        bitmapImage.BeginInit();
-        //        bitmapImage.CreateOptions = BitmapCreateOptions.IgnoreColorProfile;
-        //        bitmapImage.UriSource = new Uri(comic.CoverImagePaths.HighResPath, UriKind.Absolute);
-        //        bitmapImage.EndInit();
-        //        loading_image.Source = bitmapImage;
-        //    }
+        [RelayCommand]
+        private async Task PickFolderAsync()
+        {
+            try
+            {
+                Loading = true;
+                var folderName = SelectComicFolder();
+                if (folderName == null) {
+                    SelectedFolderText = "Folder Not Selected";
+                    return;
+                }
 
-        //    statusLabel.Text = $"Processed {comics_list.Items.Count}/{totalCount} comics.";
+                SelectedFolderText = folderName;
+                return;
 
-        //}
+ 
+            }
+            catch (Exception ex)
+            {
+                Console.Write(ex.Message);
+            }
+        }
 
-        //private object CreateTreeViewItem(bool unableToOpen, string fileName, string imagePath)
-        //{
-        //    var stackPanel = new StackPanel
-        //    {
-        //        Orientation = Orientation.Horizontal
-        //    };
+        [RelayCommand]
+        private async Task ScanFolderAsync()
+        {
+            try
+            {
+                var files = await FolderHandler.ScanFolder(SelectedFolderText).ConfigureAwait(false); ;
+                if (files == null || !files.Any()) return;
 
 
-        //    //var iconShape = unableToOpen ? FontAwesomeIcon.ExclamationCircle : FontAwesomeIcon.CheckCircle;
-        //    //var iconColor = unableToOpen ? Brushes.Red : Brushes.Green;
+                var comics = files.Select(file => new Comic(file, _extractor)).ToList();
 
-        //    //var iconSource = ImageAwesome.CreateImageSource(iconShape, iconColor);
-        //    //var icon = new System.Windows.Controls.Image
-        //    //{
-        //    //    Source = iconSource,
-        //    //    Width = 16,  // Set the desired width
-        //    //    Height = 16, // Set the desired height
-        //    //    Margin = new Thickness(0, 0, 5, 0) // Add spacing if needed
-        //    //};
-        //    //stackPanel.Children.Add(icon);
+                var result = MessageBox.Show("Found " + comics.Count + " comics. Do you want to start scanning?", "Comics Found", MessageBoxButton.OKCancel);
 
-        //    var textBlock = new TextBlock
-        //    {
-        //        Text = fileName,
-        //        VerticalAlignment = VerticalAlignment.Center
-        //    };
-        //    stackPanel.Children.Add(textBlock);
+                if (result == MessageBoxResult.OK)
+                {
+                    foreach (var comic in comics)
+                    {
+                        // Fetch metadata for the comic on a background thread
+                        await Task.Run(() => comic.LoadMetaData()).ConfigureAwait(false);
+                        CurrentImagePath = comic.CoverImagePaths.HighResPath;
 
-        //    // Create TreeViewItem and set its Header
-        //    var treeViewItem = new TreeViewItem
-        //    {
-        //        Margin = new Thickness(1),
-        //        Header = stackPanel
-        //    };
-        //    if (!unableToOpen)
-        //    {
-        //        var bitmapImage = new BitmapImage();
-        //        bitmapImage.BeginInit();
-        //        bitmapImage.CreateOptions = BitmapCreateOptions.IgnoreColorProfile;
-        //        bitmapImage.UriSource = new Uri(imagePath, UriKind.Absolute);
-        //        bitmapImage.EndInit();
-        //        treeViewItem.ToolTip = new ToolTip
-        //        {
-        //            Content = new System.Windows.Controls.Image
-        //            {
-        //                Width = 300,
-        //                Height = 200,
-        //                Source = bitmapImage
-        //            }
-        //        };
-        //    }
+                        App.Current.Dispatcher.Invoke((Action)delegate
+                        {
+                            ComicsCollection.Add(comic);
+                        });
+                 
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                //MessageBox.Show($"Initialization failed: {ex.Message}");
+                //Close();}
+            }
+        }
+        private string? SelectComicFolder()
+        {
+            var folderDialog = new OpenFolderDialog();
+            if (folderDialog.ShowDialog() == true)
+            {
+                return folderDialog.FolderName;
+            }
 
-        //    return treeViewItem;
-        //}
-
-        //private void SaveFilesToDB(List<Comic> files)
-        //{
-        //    _dbContext.Comics.AddRangeAsync(files);
-        //    _dbContext.SaveChanges();
-        //}
-
-        //private string? SelectComicFolder()
-        //{
-        //    var folderDialog = new OpenFolderDialog();
-        //    if (folderDialog.ShowDialog() == true)
-        //    {
-        //        return folderDialog.FolderName;
-        //    }
-
-        //    return null;
-        //}
+            return null;
+        }
 
     }
 }
