@@ -6,8 +6,8 @@
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                  xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
                  Title="{Binding ViewModel.ApplicationTitle, Mode=OneWay}"
-                 Width="1100"
-                 Height="650"
+                 Width="1280"
+                 Height="1080"
                  d:DataContext="{d:DesignInstance local:MainWindow,
                                      IsDesignTimeCreatable=True}"
                  d:DesignHeight="450"
@@ -69,7 +69,8 @@
         </ui:NavigationView>
 
         <ContentPresenter x:Name="RootContentDialog"
-                          Grid.Row="0" />
+                          Grid.Row="0"
+                          HorizontalAlignment="Stretch"/>
         <ui:CardAction Content="CardAction"
                        HorizontalAlignment="Left"
                        Margin="-445,-51,0,0"

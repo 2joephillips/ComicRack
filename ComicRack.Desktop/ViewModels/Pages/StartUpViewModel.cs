@@ -3,6 +3,7 @@ using ComicRack.Core.Models;
 using ComicRack.Core;
 using Microsoft.Win32;
 using System.Collections.ObjectModel;
+using ComicRack.Desktop.Views.Windows;
 
 namespace ComicRack.Desktop.ViewModels.Pages
 {
@@ -91,6 +92,20 @@ namespace ComicRack.Desktop.ViewModels.Pages
                 //Close();}
             }
         }
+
+        [RelayCommand]
+        private async Task OpenSelectedComicAsync()
+        {
+            var selectedComicId = SelectedComic;
+            var selectedComic = this.ComicsCollection[selectedComicId];
+
+            if (selectedComic == null) return;
+
+            var reader = new Reader(selectedComic);
+            reader.Show();
+        }
+
+
         private string? SelectComicFolder()
         {
             var folderDialog = new OpenFolderDialog();

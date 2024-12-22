@@ -18,6 +18,11 @@ namespace ComicRack.Desktop.Views.Pages
 
         private void ListView_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
+            this.ViewModel.OpenSelectedComicCommand.Execute(this);
+        }
+
+        private void Button_GiveFeedback(object sender, GiveFeedbackEventArgs e)
+        {
 
         }
     }

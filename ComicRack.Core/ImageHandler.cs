@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -46,7 +47,7 @@ namespace ComicRack.Core
             }
 
             return resizedImage;
-        }        
+        }
 
         public static void SaveResizedImage(Image image, string filePath, int maxWidth, int maxHeight, long quality)
         {
@@ -106,6 +107,12 @@ namespace ComicRack.Core
             };
             bitmap.Save(filePath, jpegEncoder, encoderParameters);
         }
-    }
 
+
+        public static Image GetImageFromZipArchiveEntry(ZipArchiveEntry entry)
+        {
+            using var entryStream = entry.Open();
+           return Image.FromStream(entryStream); // Load the image into memory
+        }
+    }
 }

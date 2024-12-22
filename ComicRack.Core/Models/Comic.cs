@@ -30,15 +30,23 @@ public class Comic
     [NotMapped]
     public string GetHighResImagePath => CoverImagePaths.HighResPath;
 
+    [NotMapped]
+    public string Publisher => MetaData?.Publisher ?? "Unknown";
+
+    [NotMapped]
+    public string Title => MetaData?.Title ?? "Unknown";
+
     private readonly IComicMetadataExtractor _metadataExtractor;
 
-    public Comic() { }
+    public Comic() {
+        _metadataExtractor = new ComicMetadataExtractor(new SystemStorage());
+        LoadMetaData();
+    }
 
     public Comic(string filePath, IComicMetadataExtractor metadataExtractor)
     {
         if (string.IsNullOrEmpty(filePath))
             throw new ArgumentException("File path cannot be null or empty.", nameof(filePath));
-        IdGuid = Guid.NewGuid();
         FilePath = filePath;
         FileName = filePath.Split('\\').LastOrDefault() ?? string.Empty;
         _metadataExtractor = metadataExtractor ?? throw new ArgumentNullException(nameof(metadataExtractor));
