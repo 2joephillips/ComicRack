@@ -121,7 +121,8 @@
                      ItemsSource="{Binding ViewModel.ComicsCollection, Mode=TwoWay}"
                      SelectedIndex="{Binding ViewModel.SelectedComic, Mode=TwoWay}"
                      SelectionMode="Single"
-                     MouseDoubleClick="ListView_MouseDoubleClick">
+                     MouseDoubleClick="ListView_MouseDoubleClick"
+                     MaxHeight="600">
             <ui:ListView.ItemTemplate>
                 <DataTemplate DataType="{x:Type models:Comic}">
                     <Grid Margin="8,0">
