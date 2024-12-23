@@ -1,10 +1,13 @@
 ﻿using ComicRack.Core;
 using ComicRack.Core.Models;
+using System.Drawing.Imaging;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
+using System.Windows.Media;
 
 namespace ComicRack.Desktop.Views.Windows
 {
@@ -34,12 +37,25 @@ namespace ComicRack.Desktop.Views.Windows
         private Comic _comic;
         private Dictionary<int, ZipArchiveEntry> _images = new Dictionary<int, ZipArchiveEntry>();
         private int _activeImageIndex = 0;
+
+
         public Reader(Comic selectedComic)
         {
             _comic = selectedComic;
             InitializeComponent();
             ParseImages();
             DisplayCoverImage();
+            using (Bitmap bitmap1 = new Bitmap(selectedComic.CoverImagePaths.ThumbnailPath))
+            {
+                var topColors = ColorAnalyzer.GetTopColors(bitmap1, 3);
+                // Set the most frequent color as the background
+                if (topColors.Any())
+                {
+                    var topColor = topColors.Last();
+                    this.Background = new SolidColorBrush(System.Windows.Media.Color.FromRgb(topColor.R, topColor.G, topColor.B));
+                }
+            }
+                
         }
 
         private void ParseImages()
@@ -100,8 +116,6 @@ namespace ComicRack.Desktop.Views.Windows
 
             ComicPageImage.Source = BuildImage();
         }
-
-
         private BitmapImage BuildImage()
         {
             var image = ImageHandler.GetImageFromZipArchiveEntry(_images[_activeImageIndex]);
@@ -123,7 +137,5 @@ namespace ComicRack.Desktop.Views.Windows
 
             return bitmap;
         }
-
-
     }
 }

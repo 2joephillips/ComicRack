@@ -1,4 +1,5 @@
-﻿using ComicRack.Desktop.ViewModels.Windows;
+﻿using ComicRack.Core;
+using ComicRack.Desktop.ViewModels.Windows;
 using Wpf.Ui;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
@@ -19,7 +20,7 @@ namespace ComicRack.Desktop.Views.Windows
             DataContext = this;
 
             SystemThemeWatcher.Watch(this);
-
+            ApplicationThemeManager.Apply(ApplicationSettings.CurrentTheme);
             InitializeComponent();
             SetPageService(pageService);
 

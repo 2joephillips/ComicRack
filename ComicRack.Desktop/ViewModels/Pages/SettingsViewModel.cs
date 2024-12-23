@@ -46,7 +46,7 @@ namespace ComicRack.Desktop.ViewModels.Pages
 
                     ApplicationThemeManager.Apply(ApplicationTheme.Light);
                     CurrentTheme = ApplicationTheme.Light;
-
+                    
                     break;
 
                 default:

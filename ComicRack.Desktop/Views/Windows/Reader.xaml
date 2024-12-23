@@ -10,7 +10,7 @@
         Height="1024"
         MinHeight="1024"
         Title="Reader"
-        WindowStartupLocation="CenterScreen" Background="Green">
+        WindowStartupLocation="CenterScreen" Background="{Binding ViewModel.BackGround}">
     <Window.Resources>
         <local:PercentageConverter x:Key="PercentageConverter" />
     </Window.Resources>
