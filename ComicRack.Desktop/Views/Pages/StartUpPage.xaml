@@ -166,6 +166,7 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="100" />
                         </Grid.ColumnDefinitions>
                         <ui:Image CornerRadius="4"
                                   Source="{Binding GetHighResImagePath, Mode=OneWay}"
@@ -186,6 +187,15 @@
                                    Margin="12,0,0,6"
                                    d:Text="Unknown"
                                    Text="{Binding Publisher, Mode=OneWay}" />
+                        <ui:Button Grid.RowSpan="2"
+                                   Grid.ColumnSpan="2"
+                                   Grid.Column="2"
+                                   HorizontalAlignment="Stretch"
+                                   VerticalAlignment="Stretch"
+                                   Command="{Binding DataContext.ViewModel.ShowInfo, RelativeSource={RelativeSource AncestorType=ui:ListView}}"
+                                   CommandParameter="{Binding}">
+                            Info
+                        </ui:Button>
                     </Grid>
                 </DataTemplate>
             </ui:ListView.ItemTemplate>
@@ -201,7 +211,7 @@
                    Foreground="White"
                    MouseOverBackground="Black"
                    CornerRadius="10"
-                Command="{Binding ViewModel.ScanFolderCommand, Mode=OneWay}" 
+                Command="{Binding ViewModel.ScanModel, Mode=OneWay}" 
                    Margin="0,10"/>
     </Grid>
 </Page>

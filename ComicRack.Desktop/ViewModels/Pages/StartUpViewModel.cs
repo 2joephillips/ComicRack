@@ -4,6 +4,7 @@ using ComicRack.Core;
 using Microsoft.Win32;
 using System.Collections.ObjectModel;
 using ComicRack.Desktop.Views.Windows;
+using System.Windows.Input;
 
 namespace ComicRack.Desktop.ViewModels.Pages
 {
@@ -13,13 +14,16 @@ namespace ComicRack.Desktop.ViewModels.Pages
 
         private readonly IComicMetadataExtractor _extractor;
 
+        public IRelayCommand ScanCommand { get; }
+        public ICommand ShowInfo { get; }
+
         public StartUpViewModel(IComicMetadataExtractor extractor)
         {
             _extractor = extractor;
             ScanCommand = new RelayCommand(ScanFolderAsync, CanScan);
+            ShowInfo = new RelayCommand<Comic>(ShowComicInfo);
         }
 
-        public IRelayCommand ScanCommand { get; }
 
         [ObservableProperty]
         private string _selectedFolderText = FOLDER_NOT_SELECTED;
@@ -38,6 +42,16 @@ namespace ComicRack.Desktop.ViewModels.Pages
 
         [ObservableProperty]
         private int _selectedComic = 1;
+
+
+        private void ShowComicInfo(Comic selectedComic)
+        {
+            if (selectedComic != null)
+            {
+                // Logic to display or process the selected comic
+                MessageBox.Show($"Title: {selectedComic.Title}, Publisher: {selectedComic.Publisher}");
+            }
+        }
 
         [RelayCommand]
         private async Task PickFolderAsync()
