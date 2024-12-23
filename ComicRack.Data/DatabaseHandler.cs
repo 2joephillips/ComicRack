@@ -2,6 +2,7 @@
 using ComicRack.Core.Models;
 using ComicRack.Data.Data;
 using Microsoft.EntityFrameworkCore;
+using Wpf.Ui.Appearance;
 
 namespace ComicReader.UI
 {
@@ -30,20 +31,19 @@ namespace ComicReader.UI
         }
 
 
-        public async Task<bool> InitializeSettings()
+        public async Task<List<Setting>> InitializeSettings()
         {
             var anySettings = _context.Settings.Any();
             if (anySettings)
             {
-                var setting = await _context.Settings.FirstOrDefaultAsync(s => s.Key == "SetUpComplete");
-                var setupComplete = setting != null && setting.Value == "true";
-                return (setupComplete);
+                return _context.Settings.ToList();
             };
             _context.Settings.AddRange(
-                new Setting { Key = "SetUpComplete", Value = "false" }
+                new Setting { Key = ApplicationSettings.SETUPCOMPLETE, Value = "false" },
+                new Setting { Key = ApplicationSettings.THEMECOLOR, Value = ApplicationTheme.Dark.ToString() }
                 );
             await _context.SaveChangesAsync();
-            return false;
+            return _context.Settings.ToList() ;
         }
     }
 }

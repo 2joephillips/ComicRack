@@ -5,6 +5,7 @@ using ComicReader.UI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Wpf.Ui;
+using Wpf.Ui.Appearance;
 
 namespace ComicRack.Desktop.Services
 {
@@ -47,22 +48,25 @@ namespace ComicRack.Desktop.Services
         {
             if (!Application.Current.Windows.OfType<MainWindow>().Any())
             {
-                _navigationWindow = (
-                    _serviceProvider.GetService(typeof(INavigationWindow)) as INavigationWindow
-                )!;
-                _navigationWindow!.ShowWindow();
-
                 ApplicationSettings.EnsureAppDataFolderExists();
 
                 var databaseInitializer = _serviceProvider.GetRequiredService<DatabaseHandler>();
                 databaseInitializer.EnsureDatabaseInitialized();
 
-                var setup =  await databaseInitializer.InitializeSettings();
+                var settings = await databaseInitializer.InitializeSettings();
+                ApplicationSettings.Apply(settings);
 
-                if(setup)
-                _navigationWindow.Navigate(typeof(DashboardPage));
+                ApplicationThemeManager.Apply(ApplicationSettings.CurrentTheme);
+
+                _navigationWindow = (
+                        _serviceProvider.GetService(typeof(INavigationWindow)) as INavigationWindow
+                    )!;
+                _navigationWindow!.ShowWindow();
+
+                if (ApplicationSettings.IsSetUpComplete)
+                    _navigationWindow.Navigate(typeof(DashboardPage));
                 else
-                _navigationWindow.Navigate(typeof(StartUpPage));
+                    _navigationWindow.Navigate(typeof(StartUpPage));
             }
 
             await Task.CompletedTask;
