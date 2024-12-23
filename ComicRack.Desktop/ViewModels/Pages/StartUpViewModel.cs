@@ -9,18 +9,23 @@ namespace ComicRack.Desktop.ViewModels.Pages
 {
     public partial class StartUpViewModel : ObservableObject
     {
+        const string FOLDER_NOT_SELECTED = "Folder Not Selected";
+
         private readonly IComicMetadataExtractor _extractor;
 
         public StartUpViewModel(IComicMetadataExtractor extractor)
         {
             _extractor = extractor;
+            ScanCommand = new RelayCommand(ScanFolderAsync, CanScan);
         }
 
-        [ObservableProperty]
-        private double _progressValue = 0;
+        public IRelayCommand ScanCommand { get; }
 
         [ObservableProperty]
-        private string _selectedFolderText = "Folder Not Selected";
+        private string _selectedFolderText = FOLDER_NOT_SELECTED;
+
+        [ObservableProperty]
+        private string _scanningProgress = string.Empty;
 
         [ObservableProperty]
         private string _currentImagePath = "";
@@ -39,6 +44,7 @@ namespace ComicRack.Desktop.ViewModels.Pages
         {
             try
             {
+                var tempSelectedFolderText = SelectComicFolder;
                 Loading = true;
                 var folderName = SelectComicFolder();
                 if (folderName == null) {
@@ -57,8 +63,7 @@ namespace ComicRack.Desktop.ViewModels.Pages
             }
         }
 
-        [RelayCommand]
-        private async Task ScanFolderAsync()
+        private async void ScanFolderAsync()
         {
             try
             {
@@ -72,8 +77,11 @@ namespace ComicRack.Desktop.ViewModels.Pages
 
                 if (result == MessageBoxResult.OK)
                 {
+                    var index = 0;
+                    ScanningProgress = ProgressText(comics.Count, index);
                     foreach (var comic in comics)
                     {
+                        ScanningProgress = ProgressText(comics.Count, index++);
                         // Fetch metadata for the comic on a background thread
                         await Task.Run(() => comic.LoadMetaData()).ConfigureAwait(false);
                         CurrentImagePath = comic.CoverImagePaths.HighResPath;
@@ -91,6 +99,11 @@ namespace ComicRack.Desktop.ViewModels.Pages
                 //MessageBox.Show($"Initialization failed: {ex.Message}");
                 //Close();}
             }
+        }
+
+        private string ProgressText(int count, int index)
+        {
+            return $"Progress: {index}/{count}";
         }
 
         [RelayCommand]
@@ -117,5 +130,14 @@ namespace ComicRack.Desktop.ViewModels.Pages
             return null;
         }
 
+        private bool CanScan()
+        {
+            return SelectedFolderText != FOLDER_NOT_SELECTED;
+        }
+
+        partial void OnSelectedFolderTextChanged(string value)
+        {
+            ScanCommand.NotifyCanExecuteChanged();
+        }
     }
 }

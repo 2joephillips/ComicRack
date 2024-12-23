@@ -34,7 +34,7 @@ public class Comic
     public string Publisher => MetaData?.Publisher ?? "Unknown";
 
     [NotMapped]
-    public string Title => MetaData?.Title ?? "Unknown";
+    public string Title => string.IsNullOrEmpty(MetaData?.Title) ? "Unknown" : MetaData.Title;
 
     private readonly IComicMetadataExtractor _metadataExtractor;
 

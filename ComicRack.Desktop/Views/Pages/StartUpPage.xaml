@@ -1,5 +1,4 @@
-﻿<Page 
-      x:Class="ComicRack.Desktop.Views.Pages.StartUpPage"
+﻿<Page x:Class="ComicRack.Desktop.Views.Pages.StartUpPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -14,7 +13,9 @@
       d:DesignWidth="800"
       mc:Ignorable="d">
 
-    <Grid VerticalAlignment="Top" Margin="20" Width="Auto" HorizontalAlignment="Stretch">
+    <Grid VerticalAlignment="Top"
+          Margin="20"
+          Width="Auto">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -22,98 +23,109 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
         </Grid.ColumnDefinitions>
-        
-         <!--Header--> 
+
+        <!--Header-->
         <StackPanel Orientation="Vertical"
                     HorizontalAlignment="Stretch"
                     Width="Auto"
                     Margin="10,0,0,40">
-            <TextBlock Text="Welcome to Comic Manager!"
-                       FontSize="24"
-                       FontWeight="Bold" Width="Auto" />
-            <TextBlock Text="Manage your comics effortlessly."
-                       FontSize="14" />
+            <ui:TextBlock FontTypography="TitleLarge"
+                          Text="Welcome to Comic Manager!" />
+            <ui:TextBlock FontTypography="Subtitle"
+                          Text="Manage your comics effortlessly." />
         </StackPanel>
-       
-         <!--Folder Selection  Scan Button and API Config-->
+
+        <!--Folder Selection  Scan Button and API Config-->
         <Border CornerRadius="15"
                 BorderBrush="DarkGray"
                 BorderThickness="2"
                 Background="LightGray"
-                Padding="10"
+                VerticalAlignment="Center"
                 HorizontalAlignment="Stretch"
-                VerticalAlignment="Top"
                 Grid.Row="1"
                 Grid.ColumnSpan="2"
-                Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}">
-            <StackPanel >
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
+                Margin="0,0,0,10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
-                    <ui:Button Content="Select Folder"
-                               Grid.Row="0"
-                               Grid.Column="0"
-                               VerticalAlignment="Center"
-                               HorizontalAlignment="Center"
-                               Width="120"
-                               Command="{Binding ViewModel.PickFolderCommand, Mode=OneWay}"
-                               Margin="0,10" />
+                <ui:Button Content="Select Folder"
+                           Grid.Row="0"
+                           Grid.Column="0"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Stretch"
+                           Background="Red"
+                           CornerRadius="10"
+                           Command="{Binding ViewModel.PickFolderCommand, Mode=OneWay}"
+                           Margin="10" />
 
-                    <TextBlock Grid.Row="0"
-                               Name="SelectedFolderText"
-                               Text="{Binding ViewModel.SelectedFolderText}"
-                               d:Text="C:/Test Locations"
-                               VerticalAlignment="Center"
-                               Grid.Column="1"
-                               IsEnabled="False"
-                               FontSize="16"
-                               Margin="10,0"
-                               Foreground="Black" />
+                <ui:TextBlock Grid.Row="0"
+                              Name="SelectedFolderText"
+                              Text="{Binding ViewModel.SelectedFolderText, UpdateSourceTrigger=PropertyChanged}"
+                              d:Text="C:/Test Locations"
+                              VerticalAlignment="Center"
+                              HorizontalAlignment="Stretch"
+                              Grid.Column="1"
+                              IsEnabled="False"
+                              FontSize="16"
+                              Margin="10,0"
+                              Foreground="Black" />
 
-                    <ui:Button Content="Start Scanning"
-                               Grid.Row="1"
-                               Grid.Column="0"
-                               VerticalAlignment="Center"
-                               HorizontalAlignment="Center"
-                               Margin="0,10"
-                               Width="120"
-                               Command="{Binding ViewModel.ScanFolderCommand, Mode=OneWay}" />
-                    <ui:Button Content="Api Config"
-                               Grid.Row="2"
-                               Grid.Column="0"
-                               VerticalAlignment="Center"
-                               HorizontalAlignment="Center"
-                               Margin="0,10"
-                               Width="120"
-                               Command="{Binding ViewModel.ScanFolderCommand, Mode=OneWay}" />
-                </Grid>
-            </StackPanel>
+                <ui:Button Content="Start Scanning"
+                           Grid.Row="1"
+                           Grid.Column="0"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Stretch"
+                           Background="Red"
+                           CornerRadius="10"
+                           Command="{Binding ViewModel.ScanCommand, Mode=OneWay}"
+                           Margin="10" />
+
+                <ui:TextBlock Grid.Row="1"
+                              Grid.Column="1"
+                              Name="ScanningProgress"
+                              Text="{Binding ViewModel.ScanningProgress}"
+                              d:Text="Progress: 0/100"
+                              VerticalAlignment="Center"
+                              HorizontalAlignment="Right"
+                              IsEnabled="False"
+                              FontSize="16"
+                              Foreground="Black"
+                              Margin="10"/>
+
+                <ui:Button Content="Api Config"
+                           Grid.Row="2"
+                           Grid.Column="0"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Stretch"
+                           Background="Red"
+                           CornerRadius="10"
+                           Command="{Binding ViewModel.ScanFolderCommand, Mode=OneWay}"
+                           Margin="10" />
+            </Grid>
         </Border>
 
-
-
         <!--  Current Comic Image -->
-            <ui:Image Grid.Row="2"
-                      Grid.Column="0"
-                      CornerRadius="4"
-                      BorderBrush="#33000000"
-                      Source="{Binding ViewModel.CurrentImagePath}"
-                      Stretch="UniformToFill"
-                      MaxHeight="600"
-                      VerticalAlignment="Top" />
-        
-           <!--  Comics List -->
+        <ui:Image Grid.Row="2"
+                  Grid.Column="0"
+                  CornerRadius="4"
+                  BorderBrush="#33000000"
+                  Source="{Binding ViewModel.CurrentImagePath}"
+                  Stretch="UniformToFill"
+                  MaxHeight="600"
+                  VerticalAlignment="Top" />
+
+        <!--  Comics List -->
         <ui:ListView Grid.Row="2"
                      Grid.Column="1"
                      Margin="0,10,0,10"
@@ -140,7 +152,8 @@
                                   Height="40"
                                   Stretch="Fill"
                                   Grid.RowSpan="2"
-                                  VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                  VerticalAlignment="Center"
+                                  HorizontalAlignment="Center" />
                         <TextBlock Grid.Row="0"
                                    Grid.Column="1"
                                    Margin="12,6,0,0"
@@ -156,16 +169,14 @@
                 </DataTemplate>
             </ui:ListView.ItemTemplate>
         </ui:ListView>
-       
 
-         <!--Counter  -->
-
-        <!-- Scan Button--> 
+        <!-- Scan Button-->
         <Button Content="Import Scanned Comics"
-                Width="120"
+                Width="Auto"
                 Grid.Row="3"
                 Grid.ColumnSpan="2"
                 HorizontalAlignment="Center"
+                VerticalAlignment="Center"
                 Margin="0,10"
                 Command="{Binding ViewModel.ScanFolderCommand, Mode=OneWay}" />
     </Grid>
