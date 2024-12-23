@@ -164,8 +164,8 @@
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="50" />
+                            <ColumnDefinition Width="250" />
                             <ColumnDefinition Width="100" />
                         </Grid.ColumnDefinitions>
                         <ui:Image CornerRadius="4"
@@ -190,11 +190,12 @@
                         <ui:Button Grid.RowSpan="2"
                                    Grid.ColumnSpan="2"
                                    Grid.Column="2"
-                                   HorizontalAlignment="Stretch"
-                                   VerticalAlignment="Stretch"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
                                    Command="{Binding DataContext.ViewModel.ShowInfo, RelativeSource={RelativeSource AncestorType=ui:ListView}}"
                                    CommandParameter="{Binding}">
-                            Info
+                            <ui:SymbolIcon Symbol="BookInformation24"
+                                           Filled="True" />
                         </ui:Button>
                     </Grid>
                 </DataTemplate>

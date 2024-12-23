@@ -1,5 +1,6 @@
 ﻿using ComicRack.Core.Models;
 using System.IO.Compression;
+using System.Windows.Markup;
 using System.Xml.Linq;
 
 namespace ComicRack.Core;
@@ -38,12 +39,21 @@ public class ComicMetadataExtractor : IComicMetadataExtractor
               .Count(entry => imageExtensions.Any(ext => entry.FullName.EndsWith(ext, StringComparison.OrdinalIgnoreCase)));
 
         MetaData metaData = null;
-        
+
         if (comicXML != null)
         {
             using var stream = comicXML.Open();
             var doc = XDocument.Load(stream);
             metaData = new MetaData(doc);
+            var pageCount = metaData.PageCount;
+            if (metaData.PageCount <= 0)
+            {
+                pageCount = metaData.PageCount;
+            }
+        }
+        else
+        {
+            var NeedsMetaData = true;
         }
         var coverImagePaths = _storage.CreateComicCoverImages(coverImage);
         return (metaData, imageCount, coverImagePaths);
