@@ -28,6 +28,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ComicRack.Data\ComicRack.Data.csproj" />
+    <ProjectReference Include="..\ComicRack.Desktop.Core\ComicRack.Desktop.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

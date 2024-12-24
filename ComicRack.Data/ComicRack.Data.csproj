@@ -18,8 +18,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\ComicRack.Core\ComicRack.Core.csproj" />
-  </ItemGroup>
-
 </Project>
