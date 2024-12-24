@@ -135,7 +135,7 @@ namespace ComicRack.Desktop.ViewModels.Pages
 
             //var reader  = Application.Current.ServiceProvider.GetRequiredService<Reader>();
             var reader = _serviceProvider.GetRequiredService<Reader>();
-            reader.SetUp(selectedComic);
+            reader.SetUpAsync(selectedComic);
             reader.Show();
         }
 

@@ -1,14 +1,36 @@
 ﻿using System.Drawing;
 using System.Drawing.Imaging;
+using System.Windows.Media;
 
 namespace ComicRack.Core;
 public static class ColorAnalyzer
 {
-    public static List<Color> GetTopColors(Bitmap bitmap, int topCount)
+    public static SolidColorBrush GetTopColor(string imagePath)
+    {
+        try
+        {
+            using var bitmap = new Bitmap(imagePath);
+            var topColors = GetTopColors(bitmap, 3);
+            if (topColors.Any())
+            {
+                var topColor = topColors.Last();
+                return new SolidColorBrush(System.Windows.Media.Color.FromRgb(topColor.R, topColor.G, topColor.B));
+            }
+            return new SolidColorBrush(Colors.Black);
+        }
+        catch (Exception)
+        {
+
+           return new SolidColorBrush(Colors.Black);
+        }
+       
+    }
+
+    public static List<System.Drawing.Color> GetTopColors(Bitmap bitmap, int topCount)
     {
         var colorCounts = new Dictionary<int, int>(); // Use ARGB as key
         var rect = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
-        var data = bitmap.LockBits(rect, ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+        var data = bitmap.LockBits(rect, ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
         try
         {
@@ -48,7 +70,7 @@ public static class ColorAnalyzer
 
         // Get top N colors
         return colorCounts
-            .OrderByDescending(c => c.Value)
+            .OrderByDescending(static c => c.Value)
             .Take(topCount)
             .Select(c => System.Drawing.Color.FromArgb(c.Key))
             .ToList();
