@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComicRack", "ComicRack\Comi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComicRack.Desktop", "ComicRack.Desktop\ComicRack.Desktop.csproj", "{0154C42D-0167-4C8D-9A03-50CD2A8E28FF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComicRack.Desktop.Core", "ComicRack.Desktop.Core\ComicRack.Desktop.Core.csproj", "{962E685E-F306-4C9A-8C1E-FBF45C82CAF0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComicRack.Core", "ComicRack.Core\ComicRack.Core.csproj", "{F4CD0F9F-D464-471B-905E-C346523EFBA1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +29,10 @@ Global
 		{0154C42D-0167-4C8D-9A03-50CD2A8E28FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0154C42D-0167-4C8D-9A03-50CD2A8E28FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0154C42D-0167-4C8D-9A03-50CD2A8E28FF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{962E685E-F306-4C9A-8C1E-FBF45C82CAF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{962E685E-F306-4C9A-8C1E-FBF45C82CAF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{962E685E-F306-4C9A-8C1E-FBF45C82CAF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{962E685E-F306-4C9A-8C1E-FBF45C82CAF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4CD0F9F-D464-471B-905E-C346523EFBA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4CD0F9F-D464-471B-905E-C346523EFBA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4CD0F9F-D464-471B-905E-C346523EFBA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4CD0F9F-D464-471B-905E-C346523EFBA1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

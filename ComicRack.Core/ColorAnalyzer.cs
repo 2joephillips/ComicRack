@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.Drawing.Imaging;
 
-namespace ComicRack.Desktop.Core;
+namespace ComicRack.Core;
 public static class ColorAnalyzer
 {
     public static List<Color> GetTopColors(Bitmap bitmap, int topCount)

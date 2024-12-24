@@ -3,7 +3,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.IO.Compression;
 
-namespace ComicRack.Desktop.Core;
+namespace ComicRack.Core;
 
 public static class ImageHandler
 {

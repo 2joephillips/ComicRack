@@ -1,8 +1,9 @@
 ﻿using ComicRack.Core.Models;
+using System.IO;
 using System.IO.Compression;
 using System.Xml.Linq;
 
-namespace ComicRack.Desktop.Core;
+namespace ComicRack.Core;
 public interface IComicMetadataExtractor
 {
     (MetaData metaData, int imageCount, (string ThumbnailPath, string MediumPath, string HighResPath) coverImagePath) ExtractMetadata(string filePath);

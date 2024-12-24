@@ -1,6 +1,6 @@
 ﻿using System.Xml.Linq;
 
-namespace ComicRack.Desktop.Core.Extensions;
+namespace ComicRack.Core.Extensions;
 
 public static class XDocumenExtensions
 {

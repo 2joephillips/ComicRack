@@ -1,7 +1,7 @@
 ﻿using ComicRack.Core;
 using ComicRack.Desktop.Views.Pages;
 using ComicRack.Desktop.Views.Windows;
-using ComicReader.UI;
+using ComicReader.Data;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Wpf.Ui;

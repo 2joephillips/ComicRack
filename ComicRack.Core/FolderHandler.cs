@@ -1,4 +1,6 @@
-﻿namespace ComicRack.Core;
+﻿using System.IO;
+
+namespace ComicRack.Core;
 
 public static class FolderHandler
 {

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net9.0-windows7.0</TargetFramework>
+    <TargetFramework>net8.0-windows7.0</TargetFramework>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>wpfui-icon.ico</ApplicationIcon>
     <UseWPF>true</UseWPF>
@@ -27,8 +27,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ComicRack.Core\ComicRack.Core.csproj" />
     <ProjectReference Include="..\ComicRack.Data\ComicRack.Data.csproj" />
-    <ProjectReference Include="..\ComicRack.Desktop.Core\ComicRack.Desktop.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

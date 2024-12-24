@@ -1,7 +1,8 @@
-﻿using ComicRack.Core.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using ComicRack.Core;
+using ComicRack.Core.Models;
 
-namespace ComicRack.Data.Data;
+namespace ComicRack.Data;
 
 public partial class ApplicationDbContext : DbContext
 {

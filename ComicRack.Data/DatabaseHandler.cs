@@ -1,49 +1,48 @@
 ﻿using ComicRack.Core;
 using ComicRack.Core.Models;
-using ComicRack.Data.Data;
+using ComicRack.Data;
 using Microsoft.EntityFrameworkCore;
 using Wpf.Ui.Appearance;
 
-namespace ComicReader.UI
+namespace ComicReader.Data;
+
+public  class DatabaseHandler
 {
-    public  class DatabaseHandler
+    private readonly ApplicationDbContext _context;
+
+    public DatabaseHandler(ApplicationDbContext context)
     {
-        private readonly ApplicationDbContext _context;
+        _context = context;
+    }
 
-        public DatabaseHandler(ApplicationDbContext context)
+    public async void EnsureDatabaseInitialized()
+    {
+        try
         {
-            _context = context;
+            // Apply migrations
+            await _context.Database.MigrateAsync();
+            Console.WriteLine("Database migrated and up-to-date.");
         }
-
-        public async void EnsureDatabaseInitialized()
+        catch (Exception ex)
         {
-            try
-            {
-                // Apply migrations
-                await _context.Database.MigrateAsync();
-                Console.WriteLine("Database migrated and up-to-date.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error during migration: {ex.Message}");
-                throw;
-            }
+            Console.WriteLine($"Error during migration: {ex.Message}");
+            throw;
         }
+    }
 
 
-        public async Task<List<Setting>> InitializeSettings()
+    public async Task<List<Setting>> InitializeSettings()
+    {
+        var anySettings = _context.Settings.Any();
+        if (anySettings)
         {
-            var anySettings = _context.Settings.Any();
-            if (anySettings)
-            {
-                return _context.Settings.ToList();
-            };
-            _context.Settings.AddRange(
-                new Setting { Key = ApplicationSettings.SETUPCOMPLETE, Value = "false" },
-                new Setting { Key = ApplicationSettings.THEMECOLOR, Value = ApplicationTheme.Dark.ToString() }
-                );
-            await _context.SaveChangesAsync();
-            return _context.Settings.ToList() ;
-        }
+            return _context.Settings.ToList();
+        };
+        _context.Settings.AddRange(
+            new Setting { Key = ApplicationSettings.SETUPCOMPLETE, Value = "false" },
+            new Setting { Key = ApplicationSettings.THEMECOLOR, Value = ApplicationTheme.Dark.ToString() }
+            );
+        await _context.SaveChangesAsync();
+        return _context.Settings.ToList() ;
     }
 }

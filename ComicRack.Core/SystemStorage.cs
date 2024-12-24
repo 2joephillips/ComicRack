@@ -1,5 +1,7 @@
-﻿using System.IO.Compression;
-using ComicRack.Desktop.Core;
+﻿using System.Drawing;
+using System.IO;
+using System.IO.Compression;
+using ComicRack.Core;
 
 namespace ComicRack.Core
 {
@@ -43,6 +45,6 @@ namespace ComicRack.Core
 
 
 
-       
+
     }
 }
