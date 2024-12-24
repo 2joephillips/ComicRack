@@ -11,22 +11,27 @@ public class Comic
     public int Id { get; set; }
 
     [Required]
-    public Guid IdGuid { get; set; }
+    public Guid Guid { get; set; }
 
+    [Required]
     public string FilePath { get; set; }
+    
+    [Required]
     public string FileName { get; set; }
 
-    [NotMapped]
-    public int ImageCount { get; set; }
+    public bool UnableToOpen { get; set; }
+
+    public bool NeedsMetaData { get; set; }
+
+    [Required]
+    public int? PageCount { get; set; }
 
     [NotMapped]
     public (string ThumbnailPath, string MediumPath, string HighResPath) CoverImagePaths { get; set; }
 
     [NotMapped]
     public MetaData MetaData { get; set; }
-    [NotMapped]
-    public bool UnableToOpen { get; set; }
-
+ 
     [NotMapped]
     public string GetHighResImagePath => CoverImagePaths.HighResPath;
 
@@ -56,10 +61,12 @@ public class Comic
     {
         try
         {
-            (MetaData metaData, int imageCount, (string ThumbnailPath, string MediumPath, string HighResPath) coverPaths) = _metadataExtractor.ExtractMetadata(FilePath);
+            (bool needsMetaData, MetaData metaData, int imageCount, (string ThumbnailPath, string MediumPath, string HighResPath) coverPaths) = _metadataExtractor.ExtractMetadata(FilePath);
+            NeedsMetaData = needsMetaData;
             MetaData = metaData;
             CoverImagePaths = coverPaths;
-            ImageCount = imageCount;
+            PageCount = imageCount;
+            UnableToOpen = false;
         }
         catch (Exception)
         {

@@ -6,7 +6,7 @@ using System.Xml.Linq;
 namespace ComicRack.Core;
 public interface IComicMetadataExtractor
 {
-    (MetaData metaData, int imageCount, (string ThumbnailPath, string MediumPath, string HighResPath) coverImagePath) ExtractMetadata(string filePath);
+    (bool needsMetaData, MetaData metaData, int pageCount, (string ThumbnailPath, string MediumPath, string HighResPath) coverImagePath) ExtractMetadata(string filePath);
 }
 public class ComicMetadataExtractor : IComicMetadataExtractor
 {
@@ -18,8 +18,9 @@ public class ComicMetadataExtractor : IComicMetadataExtractor
         _storage = storage ?? throw new ArgumentNullException(nameof(storage));
     }
 
-    public (MetaData metaData,int imageCount, (string ThumbnailPath, string MediumPath, string HighResPath) coverImagePath) ExtractMetadata(string filePath)
+    public (bool needsMetaData, MetaData metaData,int pageCount, (string ThumbnailPath, string MediumPath, string HighResPath) coverImagePath) ExtractMetadata(string filePath)
     {
+        var needsMetaData = false;
         if (!filePath.EndsWith(".cbz", StringComparison.OrdinalIgnoreCase))
             throw new NotSupportedException("Unsupported file type");
 
@@ -35,7 +36,7 @@ public class ComicMetadataExtractor : IComicMetadataExtractor
             .Distinct()
             .ToList();
 
-        int imageCount = archive.Entries
+        int pageCount = archive.Entries
               .Count(entry => imageExtensions.Any(ext => entry.FullName.EndsWith(ext, StringComparison.OrdinalIgnoreCase)));
 
         MetaData metaData = null;
@@ -45,17 +46,12 @@ public class ComicMetadataExtractor : IComicMetadataExtractor
             using var stream = comicXML.Open();
             var doc = XDocument.Load(stream);
             metaData = new MetaData(doc);
-            var pageCount = metaData.PageCount;
-            if (metaData.PageCount <= 0)
-            {
-                pageCount = metaData.PageCount;
-            }
         }
         else
         {
-            var NeedsMetaData = true;
+           needsMetaData = true;
         }
         var coverImagePaths = _storage.CreateComicCoverImages(coverImage);
-        return (metaData, imageCount, coverImagePaths);
+        return (needsMetaData, metaData, pageCount, coverImagePaths);
     }
 }
