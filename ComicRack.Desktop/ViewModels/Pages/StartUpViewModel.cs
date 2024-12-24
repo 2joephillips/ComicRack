@@ -5,6 +5,9 @@ using Microsoft.Win32;
 using System.Collections.ObjectModel;
 using ComicRack.Desktop.Views.Windows;
 using System.Windows.Input;
+using Wpf.Ui;
+using System.Windows;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ComicRack.Desktop.ViewModels.Pages
 {
@@ -13,13 +16,15 @@ namespace ComicRack.Desktop.ViewModels.Pages
         const string FOLDER_NOT_SELECTED = "Folder Not Selected";
 
         private readonly IComicMetadataExtractor _extractor;
+        private readonly IServiceProvider _serviceProvider;
 
         public IRelayCommand ScanCommand { get; }
         public ICommand ShowInfo { get; }
 
-        public StartUpViewModel(IComicMetadataExtractor extractor)
+        public StartUpViewModel(IComicMetadataExtractor extractor, IServiceProvider serviceProvider)
         {
             _extractor = extractor;
+            _serviceProvider = serviceProvider;
             ScanCommand = new RelayCommand(ScanFolderAsync, CanScan);
             ShowInfo = new RelayCommand<Comic>(ShowComicInfo);
         }
@@ -128,7 +133,9 @@ namespace ComicRack.Desktop.ViewModels.Pages
 
             if (selectedComic == null) return;
 
-            var reader = new Reader(selectedComic);
+            //var reader  = Application.Current.ServiceProvider.GetRequiredService<Reader>();
+            var reader = _serviceProvider.GetRequiredService<Reader>();
+            reader.SetUp(selectedComic);
             reader.Show();
         }
 

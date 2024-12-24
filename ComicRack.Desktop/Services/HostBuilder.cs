@@ -61,6 +61,10 @@ namespace ComicRack.Desktop.Services
                 services.AddSingleton<INavigationWindow, MainWindow>();
                 services.AddSingleton<MainWindowViewModel>();
 
+                // Reader Window
+                services.AddTransient<Reader>();
+                services.AddSingleton<ReaderViewModel>();
+
                 services.AddSingleton<DashboardPage>();
                 services.AddSingleton<DashboardViewModel>();
                 services.AddSingleton<DataPage>();
