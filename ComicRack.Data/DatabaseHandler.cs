@@ -6,7 +6,7 @@ using Wpf.Ui.Appearance;
 
 namespace ComicReader.Data;
 
-public  class DatabaseHandler
+public class DatabaseHandler
 {
     private readonly ApplicationDbContext _context;
 
@@ -39,10 +39,10 @@ public  class DatabaseHandler
             return _context.Settings.ToList();
         };
         _context.Settings.AddRange(
-            new Setting { Key = ApplicationSettings.SETUPCOMPLETE, Value = "false" },
-            new Setting { Key = ApplicationSettings.THEMECOLOR, Value = ApplicationTheme.Dark.ToString() }
+            new Setting { Key = ApplicationSettingKey.SetupComplete.ToString(), Value = "false" },
+            new Setting { Key = ApplicationSettingKey.ThemeColor.ToString(), Value = ApplicationTheme.Dark.ToString() }
             );
         await _context.SaveChangesAsync();
-        return _context.Settings.ToList() ;
+        return _context.Settings.ToList();
     }
 }

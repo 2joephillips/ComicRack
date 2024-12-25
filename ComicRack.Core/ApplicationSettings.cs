@@ -4,15 +4,18 @@ using Wpf.Ui.Appearance;
 
 namespace ComicRack.Core;
 
+public enum ApplicationSettingKey
+{
+    SetupComplete,
+    ThemeColor,
+    RootFolder
+}
 
 public static class ApplicationSettings 
 {
-    public static readonly string SETUPCOMPLETE = "SETUPCOMPLETE";
-    public static readonly string THEMECOLOR = "THEME";
-
     public static bool IsSetUpComplete { get; private set; } = false;
     public static ApplicationTheme CurrentTheme { get; private set; } = ApplicationTheme.Unknown;
-
+    public static string? RootFolder { get; private set; }
     public static string AppDataPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "ComicRack");
     public static string DatabasePath => Path.Combine(AppDataPath, "comics.db");
 
@@ -41,13 +44,16 @@ public static class ApplicationSettings
 
         try
         {
-            var isSetupComplete = settings.FirstOrDefault(s => s.Key == SETUPCOMPLETE)?.Value;
+            var isSetupComplete = settings.FirstOrDefault(s => s.Key == ApplicationSettingKey.SetupComplete.ToString())?.Value;
             IsSetUpComplete = isSetupComplete != null && bool.TryParse(isSetupComplete, out bool setupComplete) && setupComplete;
 
-            var currentTheme = settings.FirstOrDefault(s => s.Key == THEMECOLOR)?.Value;
+            var currentTheme = settings.FirstOrDefault(s => s.Key == ApplicationSettingKey.ThemeColor.ToString())?.Value;
             CurrentTheme = Enum.TryParse(typeof(ApplicationTheme), currentTheme, true, out var theme)
                 ? (ApplicationTheme)theme
                 : ApplicationTheme.Unknown;
+
+            var rootFolder = settings.FirstOrDefault( s => s.Key == ApplicationSettingKey.RootFolder.ToString())?.Value;
+            RootFolder = rootFolder;
         }
         catch (Exception ex)
         {

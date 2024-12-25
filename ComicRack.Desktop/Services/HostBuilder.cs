@@ -46,6 +46,8 @@ namespace ComicRack.Desktop.Services
                 // TaskBar manipulation
                 services.AddSingleton<ITaskBarService, TaskBarService>();
 
+                services.AddSingleton<SnackbarService>();
+
                 // Services containing navigation, same as INavigationWindow... but without window
                 services.AddSingleton<INavigationService, NavigationService>();
                 services.AddTransient<IComicMetadataExtractor, ComicMetadataExtractor>();
@@ -69,6 +71,8 @@ namespace ComicRack.Desktop.Services
 
                 services.AddSingleton<StartUpPage>();
                 services.AddSingleton<StartUpViewModel>();
+
+                services.AddSingleton<ISettingsRepository, SettingsRepository>();
             }).Build();
         }
     }

@@ -4,10 +4,10 @@ using ComicRack.Core;
 using Microsoft.Win32;
 using System.Collections.ObjectModel;
 using ComicRack.Desktop.Views.Windows;
-using System.Windows.Input;
-using Wpf.Ui;
-using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
+using ComicReader.Data;
+using Wpf.Ui;
+using System.Drawing;
 
 namespace ComicRack.Desktop.ViewModels.Pages
 {
@@ -17,21 +17,10 @@ namespace ComicRack.Desktop.ViewModels.Pages
 
         private readonly IComicMetadataExtractor _extractor;
         private readonly IServiceProvider _serviceProvider;
-
-        public IRelayCommand ScanCommand { get; }
-        public ICommand ShowInfo { get; }
-
-        public StartUpViewModel(IComicMetadataExtractor extractor, IServiceProvider serviceProvider)
-        {
-            _extractor = extractor;
-            _serviceProvider = serviceProvider;
-            ScanCommand = new RelayCommand(ScanFolderAsync, CanScan);
-            ShowInfo = new RelayCommand<Comic>(ShowComicInfo);
-        }
-
+        private readonly ISettingsRepository _settingsRepo;
 
         [ObservableProperty]
-        private string _selectedFolderText = FOLDER_NOT_SELECTED;
+        private string _selectedFolderText = string.Empty;
 
         [ObservableProperty]
         private string _scanningProgress = string.Empty;
@@ -48,6 +37,26 @@ namespace ComicRack.Desktop.ViewModels.Pages
         [ObservableProperty]
         private int _selectedComic = 1;
 
+        public IRelayCommand ScanCommand { get; }
+        public IRelayCommand SaveRootFolderCommand { get; }
+        public IRelayCommand ShowInfoCommand { get; }
+        public IRelayCommand PickFolderCommand { get; } 
+        public IRelayCommand OpenSelectedComicCommand { get; }
+
+        public StartUpViewModel(IComicMetadataExtractor extractor, IServiceProvider serviceProvider, ISettingsRepository settingsRepo)
+        {
+            _extractor = extractor;
+            _serviceProvider = serviceProvider;
+            _settingsRepo = settingsRepo;
+
+            ScanCommand = new RelayCommand(ScanFolderAsync, CanScanOrSave);
+            SaveRootFolderCommand = new RelayCommand(SaveRootFolderAsync, CanScanOrSave);
+            ShowInfoCommand = new RelayCommand<Comic>(ShowComicInfo);
+            PickFolderCommand = new RelayCommand(PickFolderAsync);
+            OpenSelectedComicCommand = new RelayCommand(OpenSelectedComicAsync);
+
+            SelectedFolderText = ApplicationSettings.RootFolder ?? FOLDER_NOT_SELECTED;
+        }
 
         private void ShowComicInfo(Comic selectedComic)
         {
@@ -58,30 +67,11 @@ namespace ComicRack.Desktop.ViewModels.Pages
             }
         }
 
-        [RelayCommand]
-        private async Task PickFolderAsync()
+        private void SaveRootFolderAsync()
         {
-            try
-            {
-                var tempSelectedFolderText = SelectComicFolder;
-                Loading = true;
-                var folderName = SelectComicFolder();
-                if (folderName == null) {
-                    SelectedFolderText = "Folder Not Selected";
-                    return;
-                }
-
-                SelectedFolderText = folderName;
-                return;
-
- 
-            }
-            catch (Exception ex)
-            {
-                Console.Write(ex.Message);
-            }
+           _settingsRepo.InsertOrUpdateSetting(ApplicationSettingKey.RootFolder, SelectedFolderText);
         }
-
+        
         private async void ScanFolderAsync()
         {
             try
@@ -109,7 +99,7 @@ namespace ComicRack.Desktop.ViewModels.Pages
                         {
                             ComicsCollection.Add(comic);
                         });
-                 
+
                     }
                 }
             }
@@ -120,13 +110,30 @@ namespace ComicRack.Desktop.ViewModels.Pages
             }
         }
 
-        private string ProgressText(int count, int index)
+        private async void PickFolderAsync()
         {
-            return $"Progress: {index}/{count}";
+            try
+            {
+                var tempSelectedFolderText = SelectComicFolder;
+                Loading = true;
+                var folderName = SelectComicFolder();
+                if (folderName == null) {
+                    SelectedFolderText = FOLDER_NOT_SELECTED;
+                    return;
+                }
+
+                SelectedFolderText = folderName;
+                return;
+
+ 
+            }
+            catch (Exception ex)
+            {
+                Console.Write(ex.Message);
+            }
         }
 
-        [RelayCommand]
-        private async Task OpenSelectedComicAsync()
+        private async void OpenSelectedComicAsync()
         {
             var selectedComicId = SelectedComic;
             var selectedComic = this.ComicsCollection[selectedComicId];
@@ -139,7 +146,6 @@ namespace ComicRack.Desktop.ViewModels.Pages
             reader.Show();
         }
 
-
         private string? SelectComicFolder()
         {
             var folderDialog = new OpenFolderDialog();
@@ -151,7 +157,7 @@ namespace ComicRack.Desktop.ViewModels.Pages
             return null;
         }
 
-        private bool CanScan()
+        private bool CanScanOrSave()
         {
             return SelectedFolderText != FOLDER_NOT_SELECTED;
         }
@@ -159,6 +165,13 @@ namespace ComicRack.Desktop.ViewModels.Pages
         partial void OnSelectedFolderTextChanged(string value)
         {
             ScanCommand.NotifyCanExecuteChanged();
+            SaveRootFolderCommand.NotifyCanExecuteChanged();
         }
+
+        private string ProgressText(int count, int index)
+        {
+            return $"Progress: {index}/{count}";
+        }
+
     }
 }
