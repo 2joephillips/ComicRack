@@ -13,8 +13,9 @@ namespace ComicRack.Desktop.Views.Windows
         public MainWindow(
             MainWindowViewModel viewModel,
             IPageService pageService,
-            INavigationService navigationService
-        )
+            INavigationService navigationService,
+            ISnackbarService snackbarService)
+        
         {
             ViewModel = viewModel;
             DataContext = this;
@@ -24,6 +25,8 @@ namespace ComicRack.Desktop.Views.Windows
             InitializeComponent();
             SetPageService(pageService);
 
+
+            snackbarService.SetSnackbarPresenter(SnackbarPresenter);
             navigationService.SetNavigationControl(RootNavigation);
         }
 
