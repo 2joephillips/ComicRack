@@ -13,67 +13,29 @@ using System.IO;
 using System.Reflection;
 using Wpf.Ui;
 
-namespace ComicRack.Desktop.Services
+namespace ComicRack.Desktop.Services;
+
+public static class HostBuilder
 {
-    public static class HostBuilder
+    // The.NET Generic Host provides dependency injection, configuration, logging, and other services.
+    // https://docs.microsoft.com/dotnet/core/extensions/generic-host
+    // https://docs.microsoft.com/dotnet/core/extensions/dependency-injection
+    // https://docs.microsoft.com/dotnet/core/extensions/configuration
+    // https://docs.microsoft.com/dotnet/core/extensions/logging
+    public static IHost Build()
     {
-        // The.NET Generic Host provides dependency injection, configuration, logging, and other services.
-        // https://docs.microsoft.com/dotnet/core/extensions/generic-host
-        // https://docs.microsoft.com/dotnet/core/extensions/dependency-injection
-        // https://docs.microsoft.com/dotnet/core/extensions/configuration
-        // https://docs.microsoft.com/dotnet/core/extensions/logging
-        public static IHost Build() {
-            return Host
-            .CreateDefaultBuilder()
-            .ConfigureAppConfiguration(c => { c.SetBasePath(Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location)); })
-            .ConfigureServices((context, services) =>
-            {
-                // Register DbContext
-                services.AddDbContext<ApplicationDbContext>(options =>
-                {
-                    options.UseSqlite($"Data Source={ApplicationSettings.DatabasePath}");
-                });
-                services.AddTransient<DatabaseHandler>();
-
-                services.AddHostedService<ApplicationHostService>();
-
-                // Page resolver service
-                services.AddSingleton<IPageService, PageService>();
-
-                // Theme manipulation
-                services.AddSingleton<IThemeService, ThemeService>();
-
-                // TaskBar manipulation
-                services.AddSingleton<ITaskBarService, TaskBarService>();
-
-                services.AddSingleton<SnackbarService>();
-
-                // Services containing navigation, same as INavigationWindow... but without window
-                services.AddSingleton<INavigationService, NavigationService>();
-                services.AddTransient<IComicMetadataExtractor, ComicMetadataExtractor>();
-                services.AddTransient<ISystemStorage, SystemStorage>();
-
-
-                // Main window with navigation
-                services.AddSingleton<INavigationWindow, MainWindow>();
-                services.AddSingleton<MainWindowViewModel>();
-
-                // Reader Window
-                services.AddTransient<Reader>();
-                services.AddSingleton<ReaderViewModel>();
-
-                services.AddSingleton<DashboardPage>();
-                services.AddSingleton<DashboardViewModel>();
-                services.AddSingleton<DataPage>();
-                services.AddSingleton<DataViewModel>();
-                services.AddSingleton<SettingsPage>();
-                services.AddSingleton<SettingsViewModel>();
-
-                services.AddSingleton<StartUpPage>();
-                services.AddSingleton<StartUpViewModel>();
-
-                services.AddSingleton<ISettingsRepository, SettingsRepository>();
-            }).Build();
-        }
+        return Host
+        .CreateDefaultBuilder()
+        .ConfigureAppConfiguration(c => { c.SetBasePath(Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location)); })
+        .ConfigureServices((context, services) =>
+        {
+            // Register DbContext
+            services
+                .AddDatabase()
+                .AddServices()
+                .AddUIComponents()
+                .AddRepositories();
+        })
+        .Build();
     }
 }
