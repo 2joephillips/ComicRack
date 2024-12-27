@@ -117,11 +117,11 @@ namespace ComicRack.Desktop.ViewModels.Pages
 
         if (result == System.Windows.MessageBoxResult.OK)
         {
-          var index = 0;
-          ScanningProgress = ProgressText(comics.Count, index);
+          var index = 1;
+          ScanningProgress = ProgressText(index, comics);
           foreach (var comic in comics)
           {
-            ScanningProgress = ProgressText(comics.Count, index++);
+            ScanningProgress = ProgressText(index++, comics);
             // Fetch metadata for the comic on a background thread
             await Task.Run(() => comic.LoadMetaData()).ConfigureAwait(false);
             CurrentImagePath = comic.CoverImagePaths.HighResPath;
@@ -175,9 +175,12 @@ namespace ComicRack.Desktop.ViewModels.Pages
       SaveRootFolderCommand.NotifyCanExecuteChanged();
     }
 
-    private string ProgressText(int count, int index)
+    private string ProgressText(int index, List<Comic> comics)
     {
-      return $"Progress: {index}/{count}";
+      if (index < comics.Count())
+        return $"{index}/{comics.Count()} Scanning: {comics[index - 1].FileName}";
+      else
+        return $"{index}/{comics.Count()} Unable To open: {comics.Count(s =>s.UnableToOpen)} Needs Metadata : {comics.Count(s => s.NeedsMetaData)} ";
     }
 
   }
