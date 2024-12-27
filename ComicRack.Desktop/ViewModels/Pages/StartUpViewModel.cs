@@ -43,6 +43,10 @@ namespace ComicRack.Desktop.ViewModels.Pages
     public IRelayCommand PickFolderCommand { get; }
     public IRelayCommand OpenSelectedComicCommand { get; }
 
+    public StartUpViewModel()
+    {
+      
+    }
     public StartUpViewModel(IComicMetadataExtractor extractor, IServiceProvider serviceProvider, ISettingsRepository settingsRepo, ISnackbarService snackbarService)
     {
       _extractor = extractor;
@@ -50,10 +54,11 @@ namespace ComicRack.Desktop.ViewModels.Pages
       _settingsRepo = settingsRepo;
       _snackbarService = snackbarService;
 
-      ScanCommand = new RelayCommand(ScanFolderAsync, CanScanOrSave);
-      SaveRootFolderCommand = new RelayCommand(SaveRootFolderAsync, CanScanOrSave);
-      ShowInfoCommand = new RelayCommand<Comic>(ShowComicInfo);
+
       PickFolderCommand = new RelayCommand(PickFolderAsync);
+      SaveRootFolderCommand = new RelayCommand(SaveRootFolderAsync, CanScanOrSave);
+      ScanCommand = new RelayCommand(ScanFolderAsync, CanScanOrSave);
+      ShowInfoCommand = new RelayCommand<Comic>(ShowComicInfo);
       OpenSelectedComicCommand = new RelayCommand(OpenSelectedComicAsync);
 
       SelectedFolderText = ApplicationSettings.RootFolder ?? FOLDER_NOT_SELECTED;
@@ -70,6 +75,32 @@ namespace ComicRack.Desktop.ViewModels.Pages
     private void SaveRootFolderAsync()
     {
       _settingsRepo.InsertOrUpdateSetting(ApplicationSettingKey.RootFolder, SelectedFolderText);
+      _snackbarService.Show("Root Folder Saved", $"{SelectedFolderText} saved as Root Folder",ControlAppearance.Info ,new SymbolIcon(SymbolRegular.Save24), TimeSpan.FromSeconds(5));
+    }
+
+
+    private async void PickFolderAsync()
+    {
+      try
+      {
+        var tempSelectedFolderText = SelectedFolderText;
+        Loading = true;
+        var folderName = await SelectComicFolder();
+        if (folderName != null)
+        {
+          SelectedFolderText = folderName;
+          return;
+        }
+
+        SelectedFolderText = tempSelectedFolderText;
+        return;
+
+
+      }
+      catch (Exception ex)
+      {
+        Console.Write(ex.Message);
+      }
     }
 
     private async void ScanFolderAsync()
@@ -110,30 +141,6 @@ namespace ComicRack.Desktop.ViewModels.Pages
       }
     }
 
-    private async void PickFolderAsync()
-    {
-      try
-      {
-        var tempSelectedFolderText = SelectComicFolder;
-        Loading = true;
-        var folderName = SelectComicFolder();
-        if (folderName == null)
-        {
-          SelectedFolderText = FOLDER_NOT_SELECTED;
-          return;
-        }
-
-        SelectedFolderText = folderName;
-        return;
-
-
-      }
-      catch (Exception ex)
-      {
-        Console.Write(ex.Message);
-      }
-    }
-
     private async void OpenSelectedComicAsync()
     {
       var selectedComicId = SelectedComic;
@@ -147,15 +154,14 @@ namespace ComicRack.Desktop.ViewModels.Pages
       reader.Show();
     }
 
-    private string? SelectComicFolder()
+    private async Task<string?> SelectComicFolder()
     {
-      var folderDialog = new OpenFolderDialog();
-      if (folderDialog.ShowDialog() == true)
+      return await Task.Run(() =>
       {
-        return folderDialog.FolderName;
-      }
-
-      return null;
+        var folderDialog = new OpenFolderDialog();
+        var result = folderDialog.ShowDialog() ?? false;
+        return result ? folderDialog.FolderName : null;
+      });
     }
 
     private bool CanScanOrSave()
