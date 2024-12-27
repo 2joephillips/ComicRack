@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ComicRack.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241208194606_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20241208201332_AddSettingsTable")]
+    partial class AddSettingsTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,6 +36,25 @@ namespace ComicRack.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Comics");
+                });
+
+            modelBuilder.Entity("ComicRack.Core.Setting", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Settings");
                 });
 #pragma warning restore 612, 618
         }

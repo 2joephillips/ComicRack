@@ -5,9 +5,17 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComicRack.Data", "ComicRack.Data\ComicRack.Data.csproj", "{39284C7D-489B-4DB5-A7CF-67678F6B2337}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComicRack.Core", "ComicRack.Core\ComicRack.Core.csproj", "{58D3F1DF-94D6-4F7F-B3D6-4D2B2AA0D8B9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComicRack", "ComicRack\ComicRack.csproj", "{AD5D2537-39A9-47C6-83FE-A43CECC06F93}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComicRack.UI", "ComicRack.UI\ComicRack.UI.csproj", "{99E9FC98-3ED7-4AEE-A24F-599B8F2CE5AF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComicRack.Desktop", "ComicRack.Desktop\ComicRack.Desktop.csproj", "{0154C42D-0167-4C8D-9A03-50CD2A8E28FF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComicRack.Core", "ComicRack.Core\ComicRack.Core.csproj", "{F4CD0F9F-D464-471B-905E-C346523EFBA1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EDB0C0EB-96E9-43CC-B774-7E404BB08860}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,14 +27,18 @@ Global
 		{39284C7D-489B-4DB5-A7CF-67678F6B2337}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39284C7D-489B-4DB5-A7CF-67678F6B2337}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39284C7D-489B-4DB5-A7CF-67678F6B2337}.Release|Any CPU.Build.0 = Release|Any CPU
-		{58D3F1DF-94D6-4F7F-B3D6-4D2B2AA0D8B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{58D3F1DF-94D6-4F7F-B3D6-4D2B2AA0D8B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{58D3F1DF-94D6-4F7F-B3D6-4D2B2AA0D8B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{58D3F1DF-94D6-4F7F-B3D6-4D2B2AA0D8B9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{99E9FC98-3ED7-4AEE-A24F-599B8F2CE5AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{99E9FC98-3ED7-4AEE-A24F-599B8F2CE5AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{99E9FC98-3ED7-4AEE-A24F-599B8F2CE5AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{99E9FC98-3ED7-4AEE-A24F-599B8F2CE5AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD5D2537-39A9-47C6-83FE-A43CECC06F93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD5D2537-39A9-47C6-83FE-A43CECC06F93}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD5D2537-39A9-47C6-83FE-A43CECC06F93}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD5D2537-39A9-47C6-83FE-A43CECC06F93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0154C42D-0167-4C8D-9A03-50CD2A8E28FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0154C42D-0167-4C8D-9A03-50CD2A8E28FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0154C42D-0167-4C8D-9A03-50CD2A8E28FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0154C42D-0167-4C8D-9A03-50CD2A8E28FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4CD0F9F-D464-471B-905E-C346523EFBA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4CD0F9F-D464-471B-905E-C346523EFBA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4CD0F9F-D464-471B-905E-C346523EFBA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4CD0F9F-D464-471B-905E-C346523EFBA1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
